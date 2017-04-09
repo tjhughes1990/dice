@@ -7,20 +7,21 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import ui.src.main.java.tim.input.DiceType;
 import ui.src.main.java.tim.input.DiceTypeComboBox;
 import ui.src.main.java.tim.input.InputField;
+import ui.src.main.java.tim.input.TickBox;
+import ui.src.main.java.tim.output.OutputText;
 import process.src.main.java.tim.Request;
 
 public class Window implements ActionListener, DocumentListener {
@@ -35,14 +36,22 @@ public class Window implements ActionListener, DocumentListener {
     private DiceTypeComboBox diceTypeComboBox;
     private InputField diceNumber;
     private InputField successThreshold;
+    private TickBox tenBox;
+    private TickBox oneBox;
     private JButton rollButton;
-    private JTextArea textArea;
+    private OutputText outputText;
 
     private Request response;
 
     private static final String DICE_TYPE_LABEL = "Dice Type";
     private static final String DICE_NUM_LABEL = "Number of dice";
     private static final String SUCCESS_THRESHOLD_LABEL = "Success Threshold";
+    private static final String MAX_COUNTS_DOUBLE =
+        "Max roll counts as two successes";
+    private static final String ONE_COUNTS_AS_BOTCH =
+        "Botch (roll 1 and 0 successes)";
+
+    private static final String DEFAULT_DICE_ID = "DT_D10";
     private static final int DICE_NUM_MIN = 0;
     private static final int DICE_NUM_MAX = 25;
     private static final int HGAP = 2;
@@ -67,7 +76,7 @@ public class Window implements ActionListener, DocumentListener {
         titleContainer = createTitle();
         inputContainer = createInteractionObjects();
         rollContainer = createRollButton();
-        responseContainer = createResponseArea();
+        responseContainer = createOutputField("Waiting for first roll. . .");
 
         diceNumber.setValue("1");
         successThreshold.setValue("1");
@@ -87,9 +96,12 @@ public class Window implements ActionListener, DocumentListener {
         JPanel inputContainer = new JPanel(new GridLayout(0, 2, HGAP, VGAP));
 
         diceTypeComboBox = new DiceTypeComboBox(DICE_TYPE_LABEL);
+        diceTypeComboBox.setSelected(DEFAULT_DICE_ID);
         diceTypeComboBox.getComboBox().addActionListener(this);
         diceNumber = createNumberField(DICE_NUM_LABEL, 0, 25);
         successThreshold = createNumberField(SUCCESS_THRESHOLD_LABEL, 0, 1);
+        tenBox = new TickBox(MAX_COUNTS_DOUBLE);
+        oneBox = new TickBox(ONE_COUNTS_AS_BOTCH);
 
         inputContainer.add(diceTypeComboBox.getLabelPanel());
         inputContainer.add(diceTypeComboBox.getBoxPanel());
@@ -97,30 +109,32 @@ public class Window implements ActionListener, DocumentListener {
         inputContainer.add(diceNumber.getFieldPanel());
         inputContainer.add(successThreshold.getLabelPanel());
         inputContainer.add(successThreshold.getFieldPanel());
+        inputContainer.add(tenBox.getLabelPanel());
+        inputContainer.add(tenBox.getCheckBoxPanel());
+        inputContainer.add(oneBox.getLabelPanel());
+        inputContainer.add(oneBox.getCheckBoxPanel());
 
         return inputContainer;
     }
 
-    private JPanel createResponseArea() {
-        JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        panel.setLayout(new BorderLayout());
-        textArea = new JTextArea(10, 10);
-        textArea.setEditable(false);
-        textArea.setLineWrap(true);
-        textArea.setText("Waiting for first roll. . .");
-        panel.add(textArea, BorderLayout.CENTER);
+    private InputField createNumberField(String name, int min, int max) {
+        InputField field = new InputField(name);
+        field.setMin(min);
+        field.setMax(max);
+        field.getField().getDocument().addDocumentListener(this);
 
-        return panel;
+        return field;
     }
 
-    private static JPanel createTitle() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        title = new JLabel(TITLE_TEXT);
-        title.setFont(new Font("default", Font.BOLD, TITLE_SIZE));
-        panel.add(title);
+    private JPanel createOutputField(String defaultText) {
+        JPanel outputPanel = new JPanel();
+        outputText = new OutputText(defaultText);
 
-        return panel;
+        outputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        outputPanel.setLayout(new BorderLayout());
+        outputPanel.add(outputText.getOutputArea(), BorderLayout.CENTER);
+
+        return outputPanel;
     }
 
     private JPanel createRollButton() {
@@ -133,13 +147,13 @@ public class Window implements ActionListener, DocumentListener {
         return rollPanel;
     }
 
-    private InputField createNumberField(String name, int min, int max) {
-        InputField field = new InputField(name);
-        field.setMin(min);
-        field.setMax(max);
-        field.getField().getDocument().addDocumentListener(this);
+    private static JPanel createTitle() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        title = new JLabel(TITLE_TEXT);
+        title.setFont(new Font("default", Font.BOLD, TITLE_SIZE));
+        panel.add(title);
 
-        return field;
+        return panel;
     }
 
     // Implement ActionListener.
@@ -150,45 +164,15 @@ public class Window implements ActionListener, DocumentListener {
         } else if(e.getSource() == rollButton) {
             response = new Request(diceTypeComboBox.getSelected().getFaces(),
                                    diceNumber.getValue(),
-                                   successThreshold.getValue());
-            textArea.setText(createResponseText(response));
-        }
-    }
-
-    private String createResponseText(Request response) {
-        StringBuilder sb = new StringBuilder();
-        List<Integer> rolls = response.getRolls();
-        List<Integer> successfulRolls = response.getSuccessfulRolls();
-
-        sb.append("Rolls: [" + rolls.get(0).toString());
-        for(int i = 1; i < rolls.size(); i++) {
-            sb.append(", ");
-            if(i % 10 == 0) {
-                sb.append("\n           ");
+                                   successThreshold.getValue(),
+                                   tenBox.isSelected(), oneBox.isSelected());
+            try {
+                outputText.populate(response);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null,
+                    "ERROR: Could not populate output.");
             }
-            sb.append(rolls.get(i).toString());
         }
-        sb.append("]\nTotal: " + response.getTotal() + "\n\n");
-
-        sb.append("Successes (" + successThreshold.getValue() + " or above): "
-                  + successfulRolls.size() + "\nSuccessful rolls: ");
-        if(successfulRolls.size() == 0) {
-            sb.append("NONE");
-        } else {
-            sb.append("[" + successfulRolls.get(0)
-                    .toString());
-            for(int i = 1; i < successfulRolls.size(); i++) {
-                sb.append(", ");
-                if(i % 10 == 0) {
-                    sb.append("\n                            ");
-                }
-                sb.append(successfulRolls.get(i).toString());
-            }
-            sb.append("]");
-        }
-        sb.append("\nSuccess total: " + response.getSuccessfulTotal());
-
-        return(sb.toString());
     }
 
     // Implement DocumentListener.

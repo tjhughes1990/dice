@@ -6,12 +6,18 @@ import java.util.Random;
 
 public class Request {
 
-    private List<Integer> rolls = new ArrayList<Integer>();
-    private List<Integer> successfulRolls = new ArrayList<Integer>();
+    private final List<Integer> rolls = new ArrayList<Integer>();
+    private final List<Integer> successfulRolls = new ArrayList<Integer>();
+    private final int diceType;
+    private final int successThreshold;
+    private final boolean tenBox;
+    private final boolean oneBox;
+
     private Integer total;
     private Integer successfulTotal;
 
-    public Request(int type, int num, int threshold) {
+    public Request(int type, int num, int threshold, boolean tenBox,
+            boolean oneBox) {
         total = 0;
         successfulTotal = 0;
         for(int i = 0; i < num; i++) {
@@ -23,6 +29,11 @@ public class Request {
                 successfulTotal += newRoll;
             }
         }
+
+        diceType = type;
+        successThreshold = threshold;
+        this.tenBox = tenBox;
+        this.oneBox = oneBox;
     }
 
     public List<Integer> getRolls() {
@@ -43,6 +54,22 @@ public class Request {
 
     public int numberOfSuccesses() {
         return successfulRolls.size();
+    }
+
+    public boolean isTenBoxSelected() {
+        return tenBox;
+    }
+
+    public boolean isOneBoxSelected() {
+        return oneBox;
+    }
+
+    public int getDiceType() {
+        return diceType;
+    }
+
+    public int getSuccessThreshold() {
+        return successThreshold;
     }
 
     private Integer getRoll(int diceMax) {

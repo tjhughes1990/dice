@@ -13,6 +13,9 @@ public class InputField {
     private JLabel label;
     private JTextField field;
 
+    private JPanel labelPanel;
+    private JPanel fieldPanel;
+
     private int min = 0;
     private int max = 20;
 
@@ -22,9 +25,15 @@ public class InputField {
         label = new JLabel(labelName + ":");
         field = new JTextField(INPUT_BOX_SIZE);
 
+        labelPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
+        fieldPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+
         // Validate on input.
         PlainDocument doc = (PlainDocument) field.getDocument();
         doc.setDocumentFilter(new IntFilter());
+
+        labelPanel.add(label);
+        fieldPanel.add(field);
     }
 
     // Getters for public access.
@@ -34,15 +43,11 @@ public class InputField {
     }
 
     public JPanel getFieldPanel() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-        panel.add(field);
-        return panel;
+        return fieldPanel;
     }
 
     public JPanel getLabelPanel() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
-        panel.add(label);
-        return panel;
+            return labelPanel;
     }
 
     public Integer getValue() {

@@ -10,6 +10,9 @@ public class DiceTypeComboBox {
     private JComboBox box;
     private JLabel label;
 
+    private JPanel labelPanel;
+    private JPanel comboBoxPanel;
+
     private DiceTypeMgr diceTypeMgr;
 
     public DiceTypeComboBox(String labelName) {
@@ -17,6 +20,12 @@ public class DiceTypeComboBox {
 
         label = new JLabel(labelName + ":");
         box = new JComboBox(getNamesArray());
+
+        labelPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
+        comboBoxPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+
+        labelPanel.add(label);
+        comboBoxPanel.add(box);
     }
 
     private String[] getNamesArray() {
@@ -33,19 +42,25 @@ public class DiceTypeComboBox {
     }
 
     public JPanel getBoxPanel() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-        panel.add(box);
-        return panel;
+        return comboBoxPanel;
     }
 
     public JPanel getLabelPanel() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
-        panel.add(label);
-        return panel;
+        return labelPanel;
     }
 
     public DiceType getSelected() {
         final int ind = box.getSelectedIndex();
         return diceTypeMgr.getDiceTypeList().get(ind);
+    }
+
+    public void setSelected(final String id) {
+        final List<DiceType> diceTypeList = diceTypeMgr.getDiceTypeList();
+        for(int i = 0; i < diceTypeList.size(); i++) {
+            if(diceTypeList.get(i).getDiceId().equals(id)) {
+                box.setSelectedIndex(i);
+                return;
+            }
+        }
     }
 }
