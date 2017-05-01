@@ -20,7 +20,7 @@ import javax.swing.event.DocumentListener;
 import ui.src.main.java.tim.config.Config;
 import ui.src.main.java.tim.input.DiceType;
 import ui.src.main.java.tim.input.DiceTypeComboBox;
-import ui.src.main.java.tim.input.InputField;
+import ui.src.main.java.tim.input.NumberField;
 import ui.src.main.java.tim.input.TickBox;
 import ui.src.main.java.tim.output.OutputText;
 import process.src.main.java.tim.Request;
@@ -35,8 +35,8 @@ public class Window implements ActionListener, DocumentListener {
 
     private static JLabel title;
     private DiceTypeComboBox diceTypeComboBox;
-    private InputField diceNumber;
-    private InputField successThreshold;
+    private NumberField diceNumber;
+    private NumberField successThreshold;
     private TickBox maxBox;
     private TickBox oneBox;
     private JButton rollButton;
@@ -54,7 +54,6 @@ public class Window implements ActionListener, DocumentListener {
         "Botch (roll 1 and 0 successes)";
 
     private static final String DEFAULT_DICE_ID = "DT_D10";
-    private static final int DICE_NUM_MIN = 0;
     private static final int DICE_NUM_MAX = 25;
     private static final int HGAP = 2;
     private static final int VGAP = 10;
@@ -98,8 +97,8 @@ public class Window implements ActionListener, DocumentListener {
 
         diceTypeComboBox = new DiceTypeComboBox(DICE_TYPE_LABEL);
         diceTypeComboBox.setSelected(DEFAULT_DICE_ID);
-        diceTypeComboBox.getComboBox().addActionListener(this);
-        diceNumber = createNumberField(DICE_NUM_LABEL, 0, 25);
+        diceTypeComboBox.addActionListener(this);
+        diceNumber = createNumberField(DICE_NUM_LABEL, 0, DICE_NUM_MAX);
         successThreshold = createNumberField(SUCCESS_THRESHOLD_LABEL, 0, 1);
         maxBox = new TickBox(MAX_COUNTS_DOUBLE);
         oneBox = new TickBox(ONE_COUNTS_AS_BOTCH);
@@ -118,11 +117,11 @@ public class Window implements ActionListener, DocumentListener {
         return inputContainer;
     }
 
-    private InputField createNumberField(String name, int min, int max) {
-        InputField field = new InputField(name);
+    private NumberField createNumberField(String name, int min, int max) {
+        NumberField field = new NumberField(name);
         field.setMin(min);
         field.setMax(max);
-        field.getField().getDocument().addDocumentListener(this);
+        field.addDocumentListener(this);
 
         return field;
     }

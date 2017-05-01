@@ -1,6 +1,7 @@
 package ui.src.main.java.tim.input;
 
 import java.awt.FlowLayout;
+import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -26,6 +27,10 @@ public class DiceTypeComboBox {
 
         labelPanel.add(label);
         comboBoxPanel.add(box);
+    }
+
+    public void addActionListener(ActionListener actionListener) {
+        box.addActionListener(actionListener);
     }
 
     private String[] getNamesArray() {
