@@ -1,4 +1,4 @@
 #! /bin/bash
 
-mvn install
+mvn clean install
 mv core/target/dice-*.jar .

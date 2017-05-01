@@ -8,19 +8,19 @@ public class Request {
 
     private final List<Integer> rolls = new ArrayList<Integer>();
     private final List<Integer> successfulRolls = new ArrayList<Integer>();
-    private final int diceType;
-    private final int successThreshold;
-    private final boolean tenBox;
+    private final Integer diceType;
+    private final Integer successThreshold;
+    private final boolean maxBox;
     private final boolean oneBox;
 
     private Integer total;
     private Integer successfulTotal;
 
-    public Request(int type, int num, int threshold, boolean tenBox,
+    public Request(int type, Integer num, Integer threshold, boolean maxBox,
             boolean oneBox) {
         total = 0;
         successfulTotal = 0;
-        for(int i = 0; i < num; i++) {
+        for(Integer i = 0; i < num; i++) {
             Integer newRoll = getRoll(type);
             rolls.add(newRoll);
             total += newRoll;
@@ -32,7 +32,7 @@ public class Request {
 
         diceType = type;
         successThreshold = threshold;
-        this.tenBox = tenBox;
+        this.maxBox = maxBox;
         this.oneBox = oneBox;
     }
 
@@ -52,23 +52,23 @@ public class Request {
         return successfulTotal;
     }
 
-    public int numberOfSuccesses() {
+    public Integer numberOfSuccesses() {
         return successfulRolls.size();
     }
 
-    public boolean isTenBoxSelected() {
-        return tenBox;
+    public boolean isMaxBoxSelected() {
+        return maxBox;
     }
 
     public boolean isOneBoxSelected() {
         return oneBox;
     }
 
-    public int getDiceType() {
+    public Integer getDiceType() {
         return diceType;
     }
 
-    public int getSuccessThreshold() {
+    public Integer getSuccessThreshold() {
         return successThreshold;
     }
 

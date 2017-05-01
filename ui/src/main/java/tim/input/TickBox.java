@@ -15,7 +15,7 @@ public class TickBox {
     public TickBox(String labelName) {
         label = new JLabel(labelName + ":");
         checkBox = new JCheckBox();
-        checkBox.setSelected(true);
+        checkBox.setSelected(false);
 
         labelPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
         checkBoxPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
@@ -33,5 +33,9 @@ public class TickBox {
 
     public JPanel getCheckBoxPanel() {
         return checkBoxPanel;
+    }
+
+    public void setSelected(boolean value) {
+        checkBox.setSelected(value);
     }
 }

@@ -69,7 +69,7 @@ public class OutputText {
         doc.insertString(doc.getLength(), "Successes ("
             + response.getSuccessThreshold() + " or above): ", defaultAttr);
         Integer successes = new Integer(successfulRolls.size());
-        if(response.isTenBoxSelected()) {
+        if(response.isMaxBoxSelected()) {
             for(int i = 0; i < successfulRolls.size(); i++) {
                 if(successfulRolls.get(i).equals(
                         response.getDiceType())) {

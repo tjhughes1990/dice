@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import ui.src.main.java.tim.config.Config;
 import ui.src.main.java.tim.input.DiceType;
 import ui.src.main.java.tim.input.DiceTypeComboBox;
 import ui.src.main.java.tim.input.InputField;
@@ -36,11 +37,12 @@ public class Window implements ActionListener, DocumentListener {
     private DiceTypeComboBox diceTypeComboBox;
     private InputField diceNumber;
     private InputField successThreshold;
-    private TickBox tenBox;
+    private TickBox maxBox;
     private TickBox oneBox;
     private JButton rollButton;
     private OutputText outputText;
 
+    private Config config;
     private Request response;
 
     private static final String DICE_TYPE_LABEL = "Dice Type";
@@ -78,8 +80,7 @@ public class Window implements ActionListener, DocumentListener {
         rollContainer = createRollButton();
         responseContainer = createOutputField("Waiting for first roll. . .");
 
-        diceNumber.setValue("1");
-        successThreshold.setValue("1");
+        setDefaultValues();
 
         container.add(titleContainer);
         container.add(inputContainer);
@@ -100,7 +101,7 @@ public class Window implements ActionListener, DocumentListener {
         diceTypeComboBox.getComboBox().addActionListener(this);
         diceNumber = createNumberField(DICE_NUM_LABEL, 0, 25);
         successThreshold = createNumberField(SUCCESS_THRESHOLD_LABEL, 0, 1);
-        tenBox = new TickBox(MAX_COUNTS_DOUBLE);
+        maxBox = new TickBox(MAX_COUNTS_DOUBLE);
         oneBox = new TickBox(ONE_COUNTS_AS_BOTCH);
 
         inputContainer.add(diceTypeComboBox.getLabelPanel());
@@ -109,8 +110,8 @@ public class Window implements ActionListener, DocumentListener {
         inputContainer.add(diceNumber.getFieldPanel());
         inputContainer.add(successThreshold.getLabelPanel());
         inputContainer.add(successThreshold.getFieldPanel());
-        inputContainer.add(tenBox.getLabelPanel());
-        inputContainer.add(tenBox.getCheckBoxPanel());
+        inputContainer.add(maxBox.getLabelPanel());
+        inputContainer.add(maxBox.getCheckBoxPanel());
         inputContainer.add(oneBox.getLabelPanel());
         inputContainer.add(oneBox.getCheckBoxPanel());
 
@@ -156,6 +157,15 @@ public class Window implements ActionListener, DocumentListener {
         return panel;
     }
 
+    private void setDefaultValues() {
+        Config config = new Config();
+        diceNumber.setValue(config.getDiceNumberDefault().toString());
+        successThreshold.setValue(
+            config.getSuccessThresholdDefault().toString());
+        maxBox.setSelected(config.getMaxRollDefault());
+        oneBox.setSelected(config.getBotchDefault());
+    }
+
     // Implement ActionListener.
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -165,7 +175,7 @@ public class Window implements ActionListener, DocumentListener {
             response = new Request(diceTypeComboBox.getSelected().getFaces(),
                                    diceNumber.getValue(),
                                    successThreshold.getValue(),
-                                   tenBox.isSelected(), oneBox.isSelected());
+                                   maxBox.isSelected(), oneBox.isSelected());
             try {
                 outputText.populate(response);
             } catch (Exception ex) {
