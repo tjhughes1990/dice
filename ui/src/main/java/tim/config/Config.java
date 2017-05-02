@@ -1,8 +1,9 @@
 package ui.src.main.java.tim.config;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.File;
+import java.io.FileReader;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ public class Config {
     private boolean maxRollDefault = false;
     private boolean botchDefault = false;
 
-    private static final String configFilename = "/config.txt";
+    private static final String configFilename = "config.txt";
 
     private static final List<String> PROPERTY_NAMES = new ArrayList<String>(
         Arrays.asList(
@@ -24,10 +25,14 @@ public class Config {
     ));
 
     public Config() {
+        final File configFile = new File(this.getClass()
+            .getProtectionDomain().getCodeSource().getLocation().getPath());
+        final String configAbsFilename = configFile.getPath()
+            .split(configFile.getName())[0] + configFilename;
+
         try {
-            final InputStream is = this.getClass()
-                .getResourceAsStream(configFilename);
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            BufferedReader br = new BufferedReader(
+                new FileReader(configAbsFilename));
 
             String line;
             while((line = br.readLine()) != null) {
