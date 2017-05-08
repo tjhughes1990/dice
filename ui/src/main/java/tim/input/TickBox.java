@@ -1,6 +1,7 @@
 package ui.src.main.java.tim.input;
 
 import java.awt.FlowLayout;
+import java.awt.Font;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -33,6 +34,11 @@ public class TickBox {
 
     public JPanel getCheckBoxPanel() {
         return checkBoxPanel;
+    }
+
+    public void setFont(Font labelFont, Font fieldFont) {
+        label.setFont(labelFont);
+        checkBox.setFont(fieldFont);
     }
 
     public void setSelected(boolean value) {

@@ -1,5 +1,6 @@
 package ui.src.main.java.tim.input;
 
+import java.awt.Font;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -13,6 +14,8 @@ public interface InputField {
     public void setFieldPanel(JPanel fieldPanel);
     public JPanel getLabelPanel();
     public void setLabelPanel(JPanel labelPanel);
+
+    public void setFont(Font labelFont, Font fieldFont);
 
     public void addComponentsToPanels();
     public <T> T getValue();

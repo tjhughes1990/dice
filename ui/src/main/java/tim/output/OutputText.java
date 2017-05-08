@@ -2,6 +2,7 @@ package ui.src.main.java.tim.output;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -111,4 +112,9 @@ public class OutputText {
     public JTextPane getOutputArea() {
         return textArea;
     }
+
+    public void setFont(Font font) {
+        textArea.setFont(font);
+    }
+
 }

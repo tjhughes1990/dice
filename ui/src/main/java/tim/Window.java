@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import ui.src.main.java.tim.CustomFont;
 import ui.src.main.java.tim.config.Config;
 import ui.src.main.java.tim.input.DiceType;
 import ui.src.main.java.tim.input.DiceTypeComboBox;
@@ -44,6 +45,7 @@ public class Window implements ActionListener, DocumentListener {
 
     private Config config;
     private Request response;
+    private CustomFont customFont;
 
     private static final String DICE_TYPE_LABEL = "Dice Type";
     private static final String DICE_NUM_LABEL = "Number of dice";
@@ -58,9 +60,11 @@ public class Window implements ActionListener, DocumentListener {
     private static final int HGAP = 2;
     private static final int VGAP = 10;
     private static final String TITLE_TEXT = "Dice Roller";
-    private static final int TITLE_SIZE = 20;
+    private static final int TITLE_SIZE = 36;
+    private static final int NORMAL_SIZE = 20;
 
     public Window() {
+        customFont = new CustomFont();
         initialise();
     }
 
@@ -96,12 +100,22 @@ public class Window implements ActionListener, DocumentListener {
         JPanel inputContainer = new JPanel(new GridLayout(0, 2, HGAP, VGAP));
 
         diceTypeComboBox = new DiceTypeComboBox(DICE_TYPE_LABEL);
+        diceTypeComboBox.setFont(customFont.getFont(Font.BOLD, NORMAL_SIZE),
+            customFont.getFont(NORMAL_SIZE));
         diceTypeComboBox.setSelected(DEFAULT_DICE_ID);
         diceTypeComboBox.addActionListener(this);
         diceNumber = createNumberField(DICE_NUM_LABEL, 0, DICE_NUM_MAX);
+        diceNumber.setFont(customFont.getFont(Font.BOLD, NORMAL_SIZE),
+            customFont.getFont(NORMAL_SIZE));
         successThreshold = createNumberField(SUCCESS_THRESHOLD_LABEL, 0, 1);
+        successThreshold.setFont(customFont.getFont(Font.BOLD, NORMAL_SIZE),
+            customFont.getFont(NORMAL_SIZE));
         maxBox = new TickBox(MAX_COUNTS_DOUBLE);
+        maxBox.setFont(customFont.getFont(Font.BOLD, NORMAL_SIZE),
+            customFont.getFont(NORMAL_SIZE));
         oneBox = new TickBox(ONE_COUNTS_AS_BOTCH);
+        oneBox.setFont(customFont.getFont(Font.BOLD, NORMAL_SIZE),
+            customFont.getFont(NORMAL_SIZE));
 
         inputContainer.add(diceTypeComboBox.getLabelPanel());
         inputContainer.add(diceTypeComboBox.getBoxPanel());
@@ -129,6 +143,7 @@ public class Window implements ActionListener, DocumentListener {
     private JPanel createOutputField(String defaultText) {
         JPanel outputPanel = new JPanel();
         outputText = new OutputText(defaultText);
+        outputText.setFont(customFont.getFont(NORMAL_SIZE));
 
         outputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         outputPanel.setLayout(new BorderLayout());
@@ -141,16 +156,17 @@ public class Window implements ActionListener, DocumentListener {
         JPanel rollPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
         rollButton = new JButton("Roll");
+        rollButton.setFont(customFont.getFont(Font.BOLD, NORMAL_SIZE));
         rollButton.addActionListener(this);
         rollPanel.add(rollButton);
 
         return rollPanel;
     }
 
-    private static JPanel createTitle() {
+    private JPanel createTitle() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         title = new JLabel(TITLE_TEXT);
-        title.setFont(new Font("default", Font.BOLD, TITLE_SIZE));
+        title.setFont(customFont.getFont(Font.BOLD, (float)TITLE_SIZE));
         panel.add(title);
 
         return panel;

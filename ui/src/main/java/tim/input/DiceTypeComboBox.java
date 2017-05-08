@@ -1,6 +1,7 @@
 package ui.src.main.java.tim.input;
 
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.JComboBox;
@@ -46,6 +47,10 @@ public class DiceTypeComboBox {
         return box;
     }
 
+    public JLabel getLabel() {
+        return label;
+    }
+
     public JPanel getBoxPanel() {
         return comboBoxPanel;
     }
@@ -67,5 +72,10 @@ public class DiceTypeComboBox {
                 return;
             }
         }
+    }
+
+    public void setFont(Font labelFont, Font fieldFont) {
+        label.setFont(labelFont);
+        box.setFont(fieldFont);
     }
 }

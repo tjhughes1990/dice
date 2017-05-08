@@ -1,5 +1,6 @@
 package ui.src.main.java.tim.input;
 
+import java.awt.Font;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -54,6 +55,12 @@ public abstract class BaseField implements InputField {
     public void addComponentsToPanels() {
         labelPanel.add(label);
         fieldPanel.add(field);
+    }
+
+    @Override
+    public void setFont(Font labelFont, Font fieldFont) {
+        label.setFont(labelFont);
+        field.setFont(fieldFont);
     }
 
     @Override
