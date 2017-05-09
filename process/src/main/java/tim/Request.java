@@ -16,12 +16,13 @@ public class Request {
     private Integer total;
     private Integer successfulTotal;
 
-    public Request(int type, Integer num, Integer threshold, boolean maxBox,
-            boolean oneBox) {
+    public Request(final int type, final Integer num, final Integer threshold,
+            final boolean maxBox, final boolean oneBox) {
         total = 0;
         successfulTotal = 0;
+        Integer newRoll;
         for(Integer i = 0; i < num; i++) {
-            Integer newRoll = getRoll(type);
+            newRoll = getRoll(type);
             rolls.add(newRoll);
             total += newRoll;
             if(newRoll >= threshold) {
@@ -72,8 +73,8 @@ public class Request {
         return successThreshold;
     }
 
-    private Integer getRoll(int diceMax) {
-        Random rand = new Random();
+    private Integer getRoll(final int diceMax) {
+        final Random rand = new Random();
         return new Integer(rand.nextInt(diceMax) + 1);
     }
 }

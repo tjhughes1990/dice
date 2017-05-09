@@ -19,7 +19,7 @@ public class NumberField extends BaseField {
 
     private static final int INPUT_BOX_SIZE = 3;
 
-    public NumberField(String labelName) {
+    public NumberField(final String labelName) {
         setLabel(new JLabel(labelName + ":"));
         field = new JTextField(INPUT_BOX_SIZE);
         setField(field);
@@ -30,21 +30,21 @@ public class NumberField extends BaseField {
         addComponentsToPanels();
 
         // Validate on input.
-        PlainDocument doc = (PlainDocument) field.getDocument();
+        final PlainDocument doc = (PlainDocument) field.getDocument();
         doc.setDocumentFilter(new IntFilter());
     }
 
-    public void addDocumentListener(DocumentListener documentListener) {
+    public void addDocumentListener(final DocumentListener documentListener) {
         field.getDocument().addDocumentListener(documentListener);
     }
 
     // Getters for public access.
 
-    public void setMax(int max) {
+    public void setMax(final int max) {
         this.max = max;
     }
 
-    public void setMin(int min) {
+    public void setMin(final int min) {
         this.min = min;
     }
 
@@ -58,7 +58,7 @@ public class NumberField extends BaseField {
     }
 
     @Override
-    public void setValue(Object value) {
+    public void setValue(final Object value) {
         field.setText((String)value);
     }
 

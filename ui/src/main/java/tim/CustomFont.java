@@ -11,11 +11,11 @@ public class CustomFont {
 
     public CustomFont() {
         try {
-            ClassLoader classLoader = this.getClass().getClassLoader();
-            InputStream ttfFile = classLoader
+            final ClassLoader classLoader = this.getClass().getClassLoader();
+            final InputStream ttfFile = classLoader
                 .getResourceAsStream(DEFAULT_FONT_FILE_NAME);
 
-            GraphicsEnvironment ge = GraphicsEnvironment
+            final GraphicsEnvironment ge = GraphicsEnvironment
                 .getLocalGraphicsEnvironment();
             font = Font.createFont(Font.TRUETYPE_FONT, ttfFile);
             ge.registerFont(font);
@@ -27,11 +27,11 @@ System.out.println(e.getMessage());
         }
     }
 
-    public Font getFont(int style, float size) {
+    public Font getFont(final int style, final float size) {
         return font.deriveFont(style, size);
     }
 
-    public Font getFont(float size) {
+    public Font getFont(final float size) {
         return getFont(Font.PLAIN, size);
     }
 

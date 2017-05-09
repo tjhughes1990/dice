@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 public class TickBox extends BaseField {
     private JCheckBox field;
 
-    public TickBox(String labelName) {
+    public TickBox(final String labelName) {
         setLabel(new JLabel(labelName + ":"));
         field = new JCheckBox();
         setField(field);
@@ -25,7 +25,7 @@ public class TickBox extends BaseField {
     }
 
     @Override
-    public void setValue(Object value) {
+    public void setValue(final Object value) {
         field.setSelected((Boolean)value);
     }
 }

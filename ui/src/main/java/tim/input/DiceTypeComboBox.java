@@ -13,7 +13,7 @@ public class DiceTypeComboBox extends BaseField {
 
     private DiceTypeMgr diceTypeMgr;
 
-    public DiceTypeComboBox(String labelName) {
+    public DiceTypeComboBox(final String labelName) {
         diceTypeMgr = new DiceTypeMgr();
 
         setLabel(new JLabel(labelName + ":"));
@@ -26,26 +26,27 @@ public class DiceTypeComboBox extends BaseField {
         addComponentsToPanels();
     }
 
-    public void addActionListener(ActionListener actionListener) {
+    public void addActionListener(final ActionListener actionListener) {
         box.addActionListener(actionListener);
     }
 
     private String[] getNamesArray() {
         final List<DiceType> diceTypeList = diceTypeMgr.getDiceTypeList();
-        String[] diceNameList = new String[diceTypeList.size()];
+        final String[] diceNameList = new String[diceTypeList.size()];
         for(int i = 0; i < diceTypeList.size(); i++) {
             diceNameList[i] = diceTypeList.get(i).getDiceName();
         }
         return diceNameList;
     }
 
+    @Override
     public DiceType getValue() {
         final int ind = box.getSelectedIndex();
         return diceTypeMgr.getDiceTypeList().get(ind);
     }
 
     @Override
-    public void setValue(Object id) {
+    public void setValue(final Object id) {
         final List<DiceType> diceTypeList = diceTypeMgr.getDiceTypeList();
         for(int i = 0; i < diceTypeList.size(); i++) {
             if(diceTypeList.get(i).getDiceId().equals((String)id)) {

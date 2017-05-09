@@ -97,7 +97,8 @@ public class Window implements ActionListener, DocumentListener {
     }
 
     private JPanel createInteractionObjects() {
-        JPanel inputContainer = new JPanel(new GridLayout(0, 2, HGAP, VGAP));
+        final JPanel inputContainer = new JPanel(new GridLayout(0, 2,
+            HGAP, VGAP));
 
         diceTypeComboBox = new DiceTypeComboBox(DICE_TYPE_LABEL);
         diceTypeComboBox.setFont(customFont.getFont(Font.BOLD, NORMAL_SIZE),
@@ -131,8 +132,9 @@ public class Window implements ActionListener, DocumentListener {
         return inputContainer;
     }
 
-    private NumberField createNumberField(String name, int min, int max) {
-        NumberField field = new NumberField(name);
+    private NumberField createNumberField(final String name, final int min,
+            final int max) {
+        final NumberField field = new NumberField(name);
         field.setMin(min);
         field.setMax(max);
         field.addDocumentListener(this);
@@ -140,8 +142,8 @@ public class Window implements ActionListener, DocumentListener {
         return field;
     }
 
-    private JPanel createOutputField(String defaultText) {
-        JPanel outputPanel = new JPanel();
+    private JPanel createOutputField(final String defaultText) {
+        final JPanel outputPanel = new JPanel();
         outputText = new OutputText(defaultText);
         outputText.setFont(customFont.getFont(NORMAL_SIZE));
 
@@ -153,7 +155,7 @@ public class Window implements ActionListener, DocumentListener {
     }
 
     private JPanel createRollButton() {
-        JPanel rollPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        final JPanel rollPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
         rollButton = new JButton("Roll");
         rollButton.setFont(customFont.getFont(Font.BOLD, NORMAL_SIZE));
@@ -164,7 +166,7 @@ public class Window implements ActionListener, DocumentListener {
     }
 
     private JPanel createTitle() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        final JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         title = new JLabel(TITLE_TEXT);
         title.setFont(customFont.getFont(Font.BOLD, (float)TITLE_SIZE));
         panel.add(title);
@@ -173,7 +175,7 @@ public class Window implements ActionListener, DocumentListener {
     }
 
     private void setDefaultValues() {
-        Config config = new Config();
+        final Config config = new Config();
         diceNumber.setValue(config.getDiceNumberDefault().toString());
         successThreshold.setValue(
             config.getSuccessThresholdDefault().toString());
@@ -183,7 +185,7 @@ public class Window implements ActionListener, DocumentListener {
 
     // Implement ActionListener.
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent e) {
         if(e.getSource() == diceTypeComboBox.getField()) {
             validateInput();
         } else if(e.getSource() == rollButton) {
@@ -202,22 +204,22 @@ public class Window implements ActionListener, DocumentListener {
 
     // Implement DocumentListener.
     @Override
-    public void changedUpdate(DocumentEvent e) {
+    public void changedUpdate(final DocumentEvent e) {
         validateInput();
     }
 
     @Override
-    public void insertUpdate(DocumentEvent e) {
+    public void insertUpdate(final DocumentEvent e) {
         validateInput();
     }
 
     @Override
-    public void removeUpdate(DocumentEvent e) {
+    public void removeUpdate(final DocumentEvent e) {
         validateInput();
     }
 
     private void validateInput() {
-        DiceType diceType = diceTypeComboBox.getValue();
+        final DiceType diceType = diceTypeComboBox.getValue();
         successThreshold.setMax(diceType.getFaces());
 
         boolean valid = diceNumber.isValid();

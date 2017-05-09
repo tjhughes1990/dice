@@ -22,12 +22,12 @@ public abstract class BaseField implements InputField {
     }
 
     @Override
-    public void setField(JComponent field) {
+    public void setField(final JComponent field) {
         this.field = field;
     }
 
     @Override
-    public void setLabel(JLabel label) {
+    public void setLabel(final JLabel label) {
         this.label = label;
     }
 
@@ -37,7 +37,7 @@ public abstract class BaseField implements InputField {
     }
 
     @Override
-    public void setFieldPanel(JPanel fieldPanel) {
+    public void setFieldPanel(final JPanel fieldPanel) {
         this.fieldPanel = fieldPanel;
     }
 
@@ -47,7 +47,7 @@ public abstract class BaseField implements InputField {
     }
 
     @Override
-    public void setLabelPanel(JPanel labelPanel) {
+    public void setLabelPanel(final JPanel labelPanel) {
         this.labelPanel = labelPanel;
     }
 
@@ -58,7 +58,7 @@ public abstract class BaseField implements InputField {
     }
 
     @Override
-    public void setFont(Font labelFont, Font fieldFont) {
+    public void setFont(final Font labelFont, final Font fieldFont) {
         label.setFont(labelFont);
         field.setFont(fieldFont);
     }
@@ -67,5 +67,5 @@ public abstract class BaseField implements InputField {
     public abstract <T> T getValue();
 
     @Override
-    public abstract void setValue(Object value);
+    public abstract void setValue(final Object value);
 }

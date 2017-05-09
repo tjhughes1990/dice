@@ -7,17 +7,17 @@ import javax.swing.JPanel;
 
 public interface InputField {
     public JComponent getField();
-    public void setField(JComponent field);
-    public void setLabel(JLabel label);
+    public void setField(final JComponent field);
+    public void setLabel(final JLabel label);
 
     public JPanel getFieldPanel();
-    public void setFieldPanel(JPanel fieldPanel);
+    public void setFieldPanel(final JPanel fieldPanel);
     public JPanel getLabelPanel();
-    public void setLabelPanel(JPanel labelPanel);
+    public void setLabelPanel(final JPanel labelPanel);
 
-    public void setFont(Font labelFont, Font fieldFont);
+    public void setFont(final Font labelFont, final Font fieldFont);
 
     public void addComponentsToPanels();
     public <T> T getValue();
-    public void setValue(Object value);
+    public void setValue(final Object value);
 }

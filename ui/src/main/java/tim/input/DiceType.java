@@ -5,7 +5,8 @@ public class DiceType {
     private String diceName;
     private Integer faces;
 
-    public DiceType(String diceId, String diceName, Integer faces) {
+    public DiceType(final String diceId, final String diceName,
+        final Integer faces) {
         setDiceId(diceId);
         setDiceName(diceName);
         setFaces(faces);
@@ -20,7 +21,7 @@ public class DiceType {
         return diceId;
     }
 
-    public void setDiceId(String diceId) {
+    public void setDiceId(final String diceId) {
         this.diceId = diceId;
     }
 
@@ -28,7 +29,7 @@ public class DiceType {
         return diceName;
     }
 
-    public void setDiceName(String diceName) {
+    public void setDiceName(final String diceName) {
         this.diceName = diceName;
     }
 
@@ -36,7 +37,7 @@ public class DiceType {
         return faces;
     }
 
-    public void setFaces(Integer faces) {
+    public void setFaces(final Integer faces) {
         this.faces = faces;
     }
 }

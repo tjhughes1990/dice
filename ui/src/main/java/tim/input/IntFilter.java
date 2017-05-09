@@ -10,10 +10,11 @@ public class IntFilter extends DocumentFilter {
     private boolean valid = false;
 
     @Override
-    public void insertString(FilterBypass fb, int offset, String str,
-            AttributeSet attr) throws BadLocationException {
-        Document doc = fb.getDocument();
-        StringBuilder sb = new StringBuilder();
+    public void insertString(final FilterBypass fb, final int offset,
+            final String str, final AttributeSet attr)
+            throws BadLocationException {
+        final Document doc = fb.getDocument();
+        final StringBuilder sb = new StringBuilder();
         sb.append(doc.getText(0, doc.getLength()));
         sb.insert(offset, str);
 
@@ -23,10 +24,11 @@ public class IntFilter extends DocumentFilter {
     }
 
     @Override
-    public void replace(FilterBypass fb, int offset, int length, String str,
-            AttributeSet attrs) throws BadLocationException {
-        Document doc = fb.getDocument();
-        StringBuilder sb = new StringBuilder();
+    public void replace(final FilterBypass fb, final int offset,
+            final int length, final String str, final AttributeSet attrs)
+            throws BadLocationException {
+        final Document doc = fb.getDocument();
+        final StringBuilder sb = new StringBuilder();
         sb.append(doc.getText(0, doc.getLength()));
         sb.replace(offset, offset + length, str);
 
@@ -36,10 +38,10 @@ public class IntFilter extends DocumentFilter {
     }
 
     @Override
-    public void remove(FilterBypass fb, int offset, int length)
-            throws BadLocationException {
-        Document doc = fb.getDocument();
-        StringBuilder sb = new StringBuilder();
+    public void remove(final FilterBypass fb, final int offset,
+            final int length) throws BadLocationException {
+        final Document doc = fb.getDocument();
+        final StringBuilder sb = new StringBuilder();
         sb.append(doc.getText(0, doc.getLength()));
         sb.delete(offset, offset + length);
 
@@ -48,7 +50,7 @@ public class IntFilter extends DocumentFilter {
         }
     }
 
-    public boolean validate(String str) {
+    public boolean validate(final String str) {
         if(str.length() == 0) {
             return true;
         }
@@ -64,7 +66,7 @@ public class IntFilter extends DocumentFilter {
         return valid;
     }
 
-    private void setValid(boolean valid) {
+    private void setValid(final boolean valid) {
         this.valid = valid;
     }
 }
