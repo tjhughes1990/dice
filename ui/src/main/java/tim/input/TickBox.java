@@ -1,7 +1,6 @@
 package ui.src.main.java.tim.input;
 
 import java.awt.FlowLayout;
-import java.awt.Font;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;

@@ -8,26 +8,22 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class DiceTypeComboBox {
+public class DiceTypeComboBox extends BaseField {
     private JComboBox box;
-    private JLabel label;
-
-    private JPanel labelPanel;
-    private JPanel comboBoxPanel;
 
     private DiceTypeMgr diceTypeMgr;
 
     public DiceTypeComboBox(String labelName) {
         diceTypeMgr = new DiceTypeMgr();
 
-        label = new JLabel(labelName + ":");
+        setLabel(new JLabel(labelName + ":"));
         box = new JComboBox(getNamesArray());
+        setField(box);
 
-        labelPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
-        comboBoxPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+        setLabelPanel(new JPanel(new FlowLayout(FlowLayout.TRAILING)));
+        setFieldPanel(new JPanel(new FlowLayout(FlowLayout.LEADING)));
 
-        labelPanel.add(label);
-        comboBoxPanel.add(box);
+        addComponentsToPanels();
     }
 
     public void addActionListener(ActionListener actionListener) {
@@ -43,39 +39,19 @@ public class DiceTypeComboBox {
         return diceNameList;
     }
 
-    public JComboBox getComboBox() {
-        return box;
-    }
-
-    public JLabel getLabel() {
-        return label;
-    }
-
-    public JPanel getBoxPanel() {
-        return comboBoxPanel;
-    }
-
-    public JPanel getLabelPanel() {
-        return labelPanel;
-    }
-
-    public DiceType getSelected() {
+    public DiceType getValue() {
         final int ind = box.getSelectedIndex();
         return diceTypeMgr.getDiceTypeList().get(ind);
     }
 
-    public void setSelected(final String id) {
+    @Override
+    public void setValue(Object id) {
         final List<DiceType> diceTypeList = diceTypeMgr.getDiceTypeList();
         for(int i = 0; i < diceTypeList.size(); i++) {
-            if(diceTypeList.get(i).getDiceId().equals(id)) {
+            if(diceTypeList.get(i).getDiceId().equals((String)id)) {
                 box.setSelectedIndex(i);
                 return;
             }
         }
-    }
-
-    public void setFont(Font labelFont, Font fieldFont) {
-        label.setFont(labelFont);
-        box.setFont(fieldFont);
     }
 }

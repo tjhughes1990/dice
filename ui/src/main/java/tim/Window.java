@@ -102,7 +102,7 @@ public class Window implements ActionListener, DocumentListener {
         diceTypeComboBox = new DiceTypeComboBox(DICE_TYPE_LABEL);
         diceTypeComboBox.setFont(customFont.getFont(Font.BOLD, NORMAL_SIZE),
             customFont.getFont(NORMAL_SIZE));
-        diceTypeComboBox.setSelected(DEFAULT_DICE_ID);
+        diceTypeComboBox.setValue(DEFAULT_DICE_ID);
         diceTypeComboBox.addActionListener(this);
         diceNumber = createNumberField(DICE_NUM_LABEL, 0, DICE_NUM_MAX);
         diceNumber.setFont(customFont.getFont(Font.BOLD, NORMAL_SIZE),
@@ -118,7 +118,7 @@ public class Window implements ActionListener, DocumentListener {
             customFont.getFont(NORMAL_SIZE));
 
         inputContainer.add(diceTypeComboBox.getLabelPanel());
-        inputContainer.add(diceTypeComboBox.getBoxPanel());
+        inputContainer.add(diceTypeComboBox.getFieldPanel());
         inputContainer.add(diceNumber.getLabelPanel());
         inputContainer.add(diceNumber.getFieldPanel());
         inputContainer.add(successThreshold.getLabelPanel());
@@ -184,10 +184,10 @@ public class Window implements ActionListener, DocumentListener {
     // Implement ActionListener.
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == diceTypeComboBox.getComboBox()) {
+        if(e.getSource() == diceTypeComboBox.getField()) {
             validateInput();
         } else if(e.getSource() == rollButton) {
-            response = new Request(diceTypeComboBox.getSelected().getFaces(),
+            response = new Request(diceTypeComboBox.getValue().getFaces(),
                                    diceNumber.getValue(),
                                    successThreshold.getValue(),
                                    maxBox.getValue(), oneBox.getValue());
@@ -217,7 +217,7 @@ public class Window implements ActionListener, DocumentListener {
     }
 
     private void validateInput() {
-        DiceType diceType = diceTypeComboBox.getSelected();
+        DiceType diceType = diceTypeComboBox.getValue();
         successThreshold.setMax(diceType.getFaces());
 
         boolean valid = diceNumber.isValid();
