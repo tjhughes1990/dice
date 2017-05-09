@@ -68,7 +68,4 @@ public abstract class BaseField implements InputField {
 
     @Override
     public abstract void setValue(Object value);
-
-    @Override
-    public abstract boolean isValid();
 }

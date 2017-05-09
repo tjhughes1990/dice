@@ -62,7 +62,6 @@ public class NumberField extends BaseField {
         field.setText((String)value);
     }
 
-    @Override
     public boolean isValid() {
         if(getValue() == null) {
             return false;

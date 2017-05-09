@@ -124,9 +124,9 @@ public class Window implements ActionListener, DocumentListener {
         inputContainer.add(successThreshold.getLabelPanel());
         inputContainer.add(successThreshold.getFieldPanel());
         inputContainer.add(maxBox.getLabelPanel());
-        inputContainer.add(maxBox.getCheckBoxPanel());
+        inputContainer.add(maxBox.getFieldPanel());
         inputContainer.add(oneBox.getLabelPanel());
-        inputContainer.add(oneBox.getCheckBoxPanel());
+        inputContainer.add(oneBox.getFieldPanel());
 
         return inputContainer;
     }
@@ -177,8 +177,8 @@ public class Window implements ActionListener, DocumentListener {
         diceNumber.setValue(config.getDiceNumberDefault().toString());
         successThreshold.setValue(
             config.getSuccessThresholdDefault().toString());
-        maxBox.setSelected(config.getMaxRollDefault());
-        oneBox.setSelected(config.getBotchDefault());
+        maxBox.setValue(new Boolean(config.getMaxRollDefault()));
+        oneBox.setValue(new Boolean(config.getBotchDefault()));
     }
 
     // Implement ActionListener.
@@ -190,7 +190,7 @@ public class Window implements ActionListener, DocumentListener {
             response = new Request(diceTypeComboBox.getSelected().getFaces(),
                                    diceNumber.getValue(),
                                    successThreshold.getValue(),
-                                   maxBox.isSelected(), oneBox.isSelected());
+                                   maxBox.getValue(), oneBox.getValue());
             try {
                 outputText.populate(response);
             } catch (Exception ex) {

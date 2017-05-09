@@ -6,42 +6,27 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class TickBox {
-    private JCheckBox checkBox;
-    private JLabel label;
-
-    private JPanel labelPanel;
-    private JPanel checkBoxPanel;
+public class TickBox extends BaseField {
+    private JCheckBox field;
 
     public TickBox(String labelName) {
-        label = new JLabel(labelName + ":");
-        checkBox = new JCheckBox();
-        checkBox.setSelected(false);
+        setLabel(new JLabel(labelName + ":"));
+        field = new JCheckBox();
+        setField(field);
 
-        labelPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
-        checkBoxPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-        labelPanel.add(label);
-        checkBoxPanel.add(checkBox);
+        setLabelPanel(new JPanel(new FlowLayout(FlowLayout.TRAILING)));
+        setFieldPanel(new JPanel(new FlowLayout(FlowLayout.LEADING)));
+
+        addComponentsToPanels();
     }
 
-    public boolean isSelected() {
-        return checkBox.isSelected();
+    @Override
+    public Boolean getValue() {
+        return field.isSelected();
     }
 
-    public JPanel getLabelPanel() {
-        return labelPanel;
-    }
-
-    public JPanel getCheckBoxPanel() {
-        return checkBoxPanel;
-    }
-
-    public void setFont(Font labelFont, Font fieldFont) {
-        label.setFont(labelFont);
-        checkBox.setFont(fieldFont);
-    }
-
-    public void setSelected(boolean value) {
-        checkBox.setSelected(value);
+    @Override
+    public void setValue(Object value) {
+        field.setSelected((Boolean)value);
     }
 }

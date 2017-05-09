@@ -20,5 +20,4 @@ public interface InputField {
     public void addComponentsToPanels();
     public <T> T getValue();
     public void setValue(Object value);
-    public boolean isValid();
 }
