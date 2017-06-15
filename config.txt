@@ -1,4 +1,4 @@
 NumberOfDice: 5
-SuccessThreshold: 1
+SuccessThreshold: 7
 MaxRollCountsAsTwoSuccesses: 1
-BotchNoSuccesses:1
+BotchNoSuccesses: 1

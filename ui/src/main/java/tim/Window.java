@@ -49,7 +49,7 @@ public class Window implements ActionListener, DocumentListener {
 
     private static final String DICE_TYPE_LABEL = "Dice Type";
     private static final String DICE_NUM_LABEL = "Number of dice";
-    private static final String SUCCESS_THRESHOLD_LABEL = "Success Threshold";
+    private static final String SUCCESS_THRESHOLD_LABEL = "Target Number";
     private static final String MAX_COUNTS_DOUBLE =
         "Max roll counts as two successes";
     private static final String ONE_COUNTS_AS_BOTCH =
