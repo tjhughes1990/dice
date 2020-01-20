@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     dice_service_roll_DiceRoller
  * Method:    performRolls
- * Signature: ([Ldice/service/types/IDiceRollType;I)Ldice/service/result/RollResult;
+ * Signature: ([Ldice/service/types/IDiceRollType;I)V
  */
-JNIEXPORT jobject JNICALL Java_dice_service_roll_DiceRoller_performRolls
-  (JNIEnv *, jclass, jobjectArray, jint);
+JNIEXPORT void JNICALL Java_dice_service_roll_DiceRoller_performRolls
+  (JNIEnv *, jobject, jobjectArray, jint);
 
 #ifdef __cplusplus
 }

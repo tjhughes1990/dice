@@ -46,4 +46,9 @@ public abstract class AbstractDiceRollType implements IDiceRollType {
     public Integer getSumResult() {
         return sumResult == -1 ? null : sumResult;
     }
+
+    @Override
+    public void setSumResult(final int sumResult) {
+        this.sumResult = sumResult;
+    }
 }

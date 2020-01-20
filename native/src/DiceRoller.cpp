@@ -1,9 +1,16 @@
 #include "DiceRoller.h"
 
-JNIEXPORT jobject JNICALL
-Java_dice_service_roll_DiceRoller_performRolls(JNIEnv *, jclass, jobjectArray, jint) {
+#include "DiceRollerImpl.hpp"
 
-    printf("Hello\n");
+JNIEXPORT void JNICALL
+Java_dice_service_roll_DiceRoller_performRolls(JNIEnv *env, jobject thisObj, jobjectArray diceRolls, jint diceRollsSize) {
 
-    return nullptr;
+    std::random_device rd;
+    const unsigned int seed(rd());
+
+    const DiceRollerImpl diceRoller(env, seed);
+    for(int i = 0; i < diceRollsSize; i++) {
+        jobject diceRoll(env->GetObjectArrayElement(diceRolls, i));
+        diceRoller.rollDice(diceRoll);
+    }
 }

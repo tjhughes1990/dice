@@ -3,7 +3,7 @@ package dice.service.roll;
 import java.util.ArrayList;
 import java.util.List;
 
-import dice.service.types.DefaultDiceRollType;
+import dice.service.types.DiceRollType;
 import dice.service.types.DiceType;
 import dice.service.types.IDiceRollType;
 
@@ -23,7 +23,7 @@ public class RollAggregator {
      *            the number of rolls.
      */
     public void addDefaultDiceRoll(final DiceType diceType, final int rollNumber) {
-        diceRolls.add(DefaultDiceRollType.create(diceType, rollNumber));
+        diceRolls.add(DiceRollType.create(diceType, rollNumber));
     }
 
     /**

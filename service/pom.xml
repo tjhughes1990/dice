@@ -57,7 +57,7 @@
 						</goals>
 						<configuration>
 							<target>
-								<copy todir="${project.basedir}/src/main/resources/lib" flatten="true">
+								<copy todir="${project.basedir}/src/main/resources/lib" flatten="true" overwrite="true">
 									<fileset dir="${project.build.directory}/">
 										<include name="**/*.dll" />
 										<include name="**/*.so" />
@@ -76,7 +76,7 @@
 				<configuration>
 					<compilerArgs>
 						<arg>-h</arg>
-						<arg>target/headers</arg>
+						<arg>${project.build.directory}/include</arg>
 					</compilerArgs>
 					<debug>false</debug>
 					<source>11</source>

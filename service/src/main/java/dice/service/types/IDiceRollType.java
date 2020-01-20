@@ -24,4 +24,10 @@ public interface IDiceRollType {
      * @return the sum roll result;
      */
     Integer getSumResult();
+
+    /**
+     * @param sum
+     *            the sum result to set.
+     */
+    void setSumResult(final int sum);
 }

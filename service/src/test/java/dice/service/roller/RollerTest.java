@@ -1,7 +1,7 @@
 package dice.service.roller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -28,6 +28,7 @@ public class RollerTest {
 
         final List<IDiceRollType> diceRolls = aggregator.getDiceRolls();
         assertEquals(1, diceRolls.size());
-        assertNotNull(diceRolls.get(0).getSumResult());
+        final int sum = diceRolls.get(0).getSumResult();
+        assertTrue(sum == 0 || sum == 1);
     }
 }

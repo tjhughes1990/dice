@@ -50,5 +50,5 @@ public class DiceRoller {
         performRolls(diceRollTypeArr, diceRollTypes.size());
     }
 
-    private static synchronized native void performRolls(final IDiceRollType[] diceRollTypes, final int numberOfDice);
+    private synchronized native void performRolls(final IDiceRollType[] diceRollTypes, final int numberOfDice);
 }
