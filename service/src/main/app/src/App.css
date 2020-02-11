@@ -54,6 +54,17 @@ div.diceListContainer .diceRow {
     padding: 5px 5px 5px 10px;
 }
 
+div.diceListContainer .diceRowNoSelect {
+    width: 100%;
+    padding: 5px 5px 5px 10px;
+}
+
+div.diceListContainer .diceRowSelected {
+    background-color: #aaf;
+    width: 100%;
+    padding: 5px 5px 5px 10px;
+}
+
 div.diceListContainer .diceRow:hover {
-    background-color: lightblue;;
+    background-color: #ccf;
 }

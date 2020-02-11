@@ -5,7 +5,7 @@ interface ButtonProps {
     handleAddDice: any;
     handleRemoveDice: any;
     handleRollDice: any;
-    selectedDiceIndex?: number;
+    selectedDiceRowInd?: number | undefined;
 }
 
 export default class ButtonContainer extends React.Component<ButtonProps, any> {
@@ -21,7 +21,7 @@ export default class ButtonContainer extends React.Component<ButtonProps, any> {
                     <button type="button"
                             className="btn btn-primary"
                             onClick={this.props.handleRemoveDice}
-                            disabled={this.props.selectedDiceIndex === undefined}>Remove dice</button>
+                            disabled={this.props.selectedDiceRowInd === undefined}>Remove dice</button>
                 </div>
                 <div className="row">
                     <button type="button"

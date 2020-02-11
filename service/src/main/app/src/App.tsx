@@ -5,14 +5,16 @@ import { default as ButtonContainer } from './containers/ButtonContainer';
 import { default as DiceListContainer } from './containers/DiceListContainer';
 import { Dice } from './Dice';
 
-export default class App extends React.Component {
+interface IState {
+    diceList: Array<Dice>;
+    selectedDiceRow: HTMLDivElement | undefined;
+}
 
-    App = () => {
-    }
+export default class App extends React.Component<{}, IState> {
 
-    state = {
+    public readonly state = {
         diceList: [],
-        selectedDiceIndex: undefined
+        selectedDiceRow: undefined
     }
 
     handleAddDice = () => {
@@ -24,14 +26,22 @@ export default class App extends React.Component {
         
         
         this.setState({"diceList": diceList});
-        console.log(this.state.diceList);
     }
 
     /**
      * Handle removing a dice.
      */
     handleRemoveDice = () => {
-        console.log("Dice removed.");
+        if(typeof this.state.selectedDiceRow !== "undefined") {
+            const row: HTMLDivElement = this.state.selectedDiceRow!;
+            const id: string | undefined = row.dataset.id;
+            if(typeof id === "string") {
+                const oldDiceList = this.state.diceList;
+                oldDiceList.splice(parseInt(id), 1);
+                this.setState({"diceList": oldDiceList, "selectedDiceRow": undefined});
+                row.className = "diceRow";
+            }
+        }
     }
 
     /**
@@ -39,6 +49,10 @@ export default class App extends React.Component {
      */
     handleRollDice = () => {
         console.log("Dice rolled.");
+    }
+
+    setSelectedDiceRow = (row: HTMLDivElement) => {
+        this.setState({"selectedDiceRow": row});
     }
 
     render = () => {
@@ -51,8 +65,10 @@ export default class App extends React.Component {
                             handleAddDice={this.handleAddDice}
                             handleRemoveDice={this.handleRemoveDice}
                             handleRollDice={this.handleRollDice}
-                            selectedDiceIndex={this.state.selectedDiceIndex} />
-                    <DiceListContainer diceList={this.state.diceList}/>
+                            selectedDiceRowInd={this.state.selectedDiceRow} />
+                    <DiceListContainer diceList={this.state.diceList}
+                            selectedDiceRow={this.state.selectedDiceRow}
+                            setSelectedDiceRow={this.setSelectedDiceRow}/>
                 </div>
             </div>
         );
