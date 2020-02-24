@@ -1,4 +1,5 @@
 import React, { Component, MouseEvent} from 'react';
+
 import { Dice } from '../Dice';
 
 interface DiceListProps {
@@ -8,10 +9,6 @@ interface DiceListProps {
 }
 
 export default class DiceListContainer extends Component<DiceListProps, {}> {
-
-    constructor(props: any) {
-        super(props);
-    }
 
     /**
      * Handle clicking a row.
@@ -25,7 +22,6 @@ export default class DiceListContainer extends Component<DiceListProps, {}> {
                 this.props.setSelectedDiceRow(undefined);
                 target.className = "diceRow";
             } else {
-                const ind: number = parseInt(target.dataset.id);
                 if(typeof oldSelectedDiceRow !== "undefined") {
                     oldSelectedDiceRow.className = "diceRow";
                 }
