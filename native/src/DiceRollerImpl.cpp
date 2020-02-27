@@ -5,12 +5,14 @@ DiceRollerImpl::DiceRollerImpl(JNIEnv* a_env_p, const unsigned int a_seed)
     , m_rollerClass_p(m_env_p->FindClass("dice/service/types/IDiceRollType"))
     , m_minMethod_p(m_env_p->GetMethodID(m_rollerClass_p, "getMinResult", "()I"))
     , m_maxMethod_p(m_env_p->GetMethodID(m_rollerClass_p, "getMaxResult", "()I"))
-    , m_rollNumMethod_p(m_env_p->GetMethodID(m_rollerClass_p, "getNumberOfRolls", "()I"))
+    , m_rollNumMethod_p(m_env_p->GetMethodID(m_rollerClass_p, "getRollNumber", "()I"))
     , m_setResultMethod_p(m_env_p->GetMethodID(m_rollerClass_p, "setSumResult", "(I)V"))
     , m_seed(a_seed) {
 }
 
 DiceRollerImpl::~DiceRollerImpl() { }
+
+#include <iostream>
 
 void
 DiceRollerImpl::rollDice(jobject a_diceRoll_p) const {

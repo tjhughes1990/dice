@@ -18,7 +18,7 @@ public interface IDiceRollType {
     /**
      * @return the number of rolls to perform.
      */
-    int getNumberOfRolls();
+    int getRollNumber();
 
     /**
      * @return the sum roll result;

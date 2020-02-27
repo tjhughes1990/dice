@@ -19,5 +19,5 @@ This small C++/Java program was designed as a player aid to simulate dice rolls 
 
 #### Licence Stuff
 
-* Icons derived without changes from Font Awesome [(licence)](https://fontawesome.com/license/free).
+* Icons derived with changes from Font Awesome [(licence)](https://fontawesome.com/license/free).
 

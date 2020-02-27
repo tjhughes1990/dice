@@ -1,7 +1,7 @@
 export type Dice = {
-    name: string;
-    lowerBound: number;
-    upperBound: number;
-    count: number;
-    roll?: number;
+    name?: string;
+    minResult: number;
+    maxResult: number;
+    rollNumber: number;
+    sumResult?: number;
 }

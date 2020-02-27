@@ -10,6 +10,10 @@
     padding: 0px 0px 0px 20px;
 }
 
+.titleBar > .diceIcon {
+    padding: 0px 20px;
+}
+
 div.buttonContainer {
     max-width: 150px;
     width: 150px;

@@ -15,17 +15,17 @@ export default class DiceListContainer extends Component<DiceListProps, {}> {
      */
     handleDiceRowClick = (event: MouseEvent<HTMLDivElement>) => {
         const target = event.target as HTMLDivElement;
-        if(typeof target.dataset.id === "string") {
+        if(typeof target.dataset.id === 'string') {
             const oldSelectedDiceRow = this.props.selectedDiceRow;
             if(oldSelectedDiceRow !== undefined && oldSelectedDiceRow.dataset.id === target.dataset.id) {
                 // Previously selected row was deselected.
                 this.props.setSelectedDiceRow(undefined);
-                target.className = "diceRow";
+                target.className = 'diceRow';
             } else {
-                if(typeof oldSelectedDiceRow !== "undefined") {
-                    oldSelectedDiceRow.className = "diceRow";
+                if(typeof oldSelectedDiceRow !== 'undefined') {
+                    oldSelectedDiceRow.className = 'diceRow';
                 }
-                target.className = "diceRowSelected";
+                target.className = 'diceRowSelected';
 
                 this.props.setSelectedDiceRow(target);
             }
@@ -37,19 +37,19 @@ export default class DiceListContainer extends Component<DiceListProps, {}> {
         this.props.diceList.forEach((d, ind) => {
             diceListElements.push(<div key={ind.toString()}
                                           data-id={ind}
-                                          className="diceRow"
+                                          className='diceRow'
                                           onClick={this.handleDiceRowClick}>
-                                      {d.name} X{d.count}
+                                      {d.name} X{d.rollNumber} {d.sumResult ? d.sumResult : undefined}
                                   </div>);
         });
 
         let contents: JSX.Element | Array<JSX.Element> = diceListElements.length === 0
-                ? <div className="diceRowNoSelect">No dice added</div>
+                ? <div className='diceRowNoSelect'>No dice added</div>
                 : diceListElements;
 
         return (
-            <div className="diceListContainer">
-                <div className="title">Dice list</div>
+            <div className='diceListContainer'>
+                <div className='title'>Dice list</div>
                 {contents}
             </div>
         );

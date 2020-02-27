@@ -16,13 +16,13 @@ interface IState {
 }
 
 const diceTypes: OptionTypeBase[] = [
-  { value: {name: "Coin", lowerBound: 0, upperBound: 1}, label: "Coin" },
-  { value: {name: "D4", lowerBound: 1, upperBound: 4}, label: "D4" },
-  { value: {name: "D6", lowerBound: 1, upperBound: 6}, label: "D6" },
-  { value: {name: "D8", lowerBound: 1, upperBound: 8}, label: "D8" },
-  { value: {name: "D10", lowerBound: 1, upperBound: 10}, label: "D10" },
-  { value: {name: "D12", lowerBound: 1, upperBound: 12}, label: "D12" },
-  { value: {name: "D20", lowerBound: 1, upperBound: 20}, label: "D20" }
+  { value: {name: 'Coin', minResult: 0, maxResult: 1}, label: 'Coin' },
+  { value: {name: 'D4', minResult: 1, maxResult: 4}, label: 'D4' },
+  { value: {name: 'D6', minResult: 1, maxResult: 6}, label: 'D6' },
+  { value: {name: 'D8', minResult: 1, maxResult: 8}, label: 'D8' },
+  { value: {name: 'D10', minResult: 1, maxResult: 10}, label: 'D10' },
+  { value: {name: 'D12', minResult: 1, maxResult: 12}, label: 'D12' },
+  { value: {name: 'D20', minResult: 1, maxResult: 20}, label: 'D20' }
 ];
 
 export default class AddDiceModal extends Component<AddDiceModalProps, IState> {
@@ -40,9 +40,9 @@ export default class AddDiceModal extends Component<AddDiceModalProps, IState> {
         let countValue: string = e.currentTarget.value;
 
         if(this.validateCount(countValue)) {
-            this.setState({"count": parseInt(countValue)});
+            this.setState({'count': parseInt(countValue)});
         } else {
-            this.setState({"count": undefined});
+            this.setState({'count': undefined});
         }
     }
 
@@ -50,10 +50,10 @@ export default class AddDiceModal extends Component<AddDiceModalProps, IState> {
     handleAddDice = () => {
         let value = this.state.type.value;
         this.props.handleAddDice({
-            "name": value.name,
-            "lowerBound": value.lowerBound,
-            "upperBound": value.upperBound,
-            "count": this.state.count
+            'name': value.name,
+            'minResult': value.minResult,
+            'maxResult': value.maxResult,
+            'rollNumber': this.state.count
          });
     }
 
@@ -83,27 +83,27 @@ export default class AddDiceModal extends Component<AddDiceModalProps, IState> {
                     <form>
                         <div>
                             <label>Dice Type:</label>
-                            <Select className="diceModalSelect"
+                            <Select className='diceModalSelect'
                                     value={this.state.type}
                                     onChange={this.handleTypeSelect}
                                     options={diceTypes} />
                         </div>
-                        <div style={{margin: "10px 0 0 0"}}>
+                        <div style={{margin: '10px 0 0 0'}}>
                             <label>Number:</label>
-                            <input className={this.state.count !== undefined ? "diceModalCount": "diceModalCountInvalid"}
-                                    type="text"
+                            <input className={this.state.count !== undefined ? 'diceModalCount': 'diceModalCountInvalid'}
+                                    type='text'
                                     defaultValue={this.state.count}
                                     onChange={this.handleCountChange} />
                         </div>
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <button type="button"
-                            className="btn btn-primary"
+                    <button type='button'
+                            className='btn btn-primary'
                             disabled={this.state.count === undefined}
                             onClick={this.handleAddDice}>OK</button>
-                    <button type="button"
-                            className="btn btn-primary"
+                    <button type='button'
+                            className='btn btn-primary'
                             onClick={this.props.handleCancel}>Cancel</button>
                 </Modal.Footer>
             </Modal>

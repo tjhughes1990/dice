@@ -40,6 +40,10 @@ public class DiceRoller {
     public void performRolls(final RollAggregator rollAggregator) {
         final List<IDiceRollType> diceRollTypes = rollAggregator.getDiceRolls();
 
+        if (diceRollTypes.isEmpty()) {
+            return;
+        }
+
         // Convert to array.
         final int size = diceRollTypes.size();
         final IDiceRollType[] diceRollTypeArr = new IDiceRollType[size];
@@ -47,7 +51,7 @@ public class DiceRoller {
             diceRollTypeArr[i] = diceRollTypes.get(i);
         }
 
-        performRolls(diceRollTypeArr, diceRollTypes.size());
+        performRolls(diceRollTypeArr, size);
     }
 
     private synchronized native void performRolls(final IDiceRollType[] diceRollTypes, final int numberOfDice);
