@@ -1,0 +1,26 @@
+div.buttonContainer {
+    max-width: 150px;
+    width: 150px;
+
+    margin: 50px 20px;
+}
+
+div.buttonContainer button.btn {
+    max-width: 150px;
+    width: 150px;
+}
+
+div.buttonContainer .row {
+    margin: 10px;
+}
+
+.btn {
+    margin: auto;
+}
+
+.btn.btn-primary:disabled {
+    background-color: grey;
+    border-color: grey;
+
+    cursor: default;
+}

@@ -12,7 +12,7 @@ MESSAGE("-- Using configuration: " ${CMAKE_BUILD_TYPE})
 # Set build options.
 SET(CMAKE_CXX_STANDARD 20)
 SET(CMAKE_CXX_STANDARD_REQUIRED True)
-SET(CMAKE_CXX_FLAGS "-Wpedantic -Wall -Wextra") #-Werror
+SET(CMAKE_CXX_FLAGS "-Wpedantic -Wall -Wextra -Werror")
 SET(CMAKE_CXX_FLAGS_DEBUG "-g")
 SET(CMAKE_CXX_FLAGS_RELEASE "-O3")
 

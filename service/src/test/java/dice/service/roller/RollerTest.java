@@ -26,6 +26,7 @@ public class RollerTest {
      * Test that a sum is produced.
      *
      * @throws DiceException
+     *             if new dice or roller couldn't be created.
      */
     @Test
     public void rollerTest() throws DiceException {

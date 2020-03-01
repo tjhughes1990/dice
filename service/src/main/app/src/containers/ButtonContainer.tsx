@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import './ButtonContainer.css';
+
 interface ButtonProps {
     diceCount: number;
     handleAddDice: any;

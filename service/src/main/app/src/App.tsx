@@ -36,7 +36,7 @@ export default class App extends React.Component<{}, IState> {
                 const oldDiceList = this.state.diceList;
                 oldDiceList.splice(parseInt(id), 1);
                 this.setState({ 'diceList': oldDiceList, 'selectedDiceRow': undefined });
-                row.className = 'diceRow';
+                row.className = 'diceRow row';
             }
         }
     }

@@ -1,3 +1,6 @@
+/**
+ * @file DiceRollerImpl implementation file.
+ */
 #include "DiceRollerImpl.hpp"
 
 DiceRollerImpl::DiceRollerImpl(JNIEnv* a_env_p, const unsigned int a_seed)
@@ -11,8 +14,6 @@ DiceRollerImpl::DiceRollerImpl(JNIEnv* a_env_p, const unsigned int a_seed)
 }
 
 DiceRollerImpl::~DiceRollerImpl() { }
-
-#include <iostream>
 
 void
 DiceRollerImpl::rollDice(jobject a_diceRoll_p) const {

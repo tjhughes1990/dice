@@ -1,3 +1,6 @@
+/**
+ * @file DiceRollerImpl header file.
+ */
 #ifndef DICE_ROLLLER_IMPL_HPP
 #define DICE_ROLLLER_IMPL_HPP
 
@@ -5,6 +8,9 @@
 #include <memory>
 #include <random>
 
+/**
+ * @brief Dice roller implementation class.
+ */
 class DiceRollerImpl {
 public:
     /**

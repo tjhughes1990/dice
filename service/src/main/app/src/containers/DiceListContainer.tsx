@@ -1,5 +1,6 @@
-import React, { Component, MouseEvent} from 'react';
+import React, { Component, MouseEvent } from 'react';
 
+import './DiceListContainer.css';
 import { Dice } from '../Dice';
 
 interface DiceListProps {
@@ -14,43 +15,67 @@ export default class DiceListContainer extends Component<DiceListProps, {}> {
      * Handle clicking a row.
      */
     handleDiceRowClick = (event: MouseEvent<HTMLDivElement>) => {
-        const target = event.target as HTMLDivElement;
-        if(typeof target.dataset.id === 'string') {
+        const target: HTMLDivElement = event.target as HTMLDivElement;
+        const parentRow: HTMLDivElement = target.parentElement as HTMLDivElement;
+        if (parentRow !== null && typeof parentRow.dataset.id === 'string') {
             const oldSelectedDiceRow = this.props.selectedDiceRow;
-            if(oldSelectedDiceRow !== undefined && oldSelectedDiceRow.dataset.id === target.dataset.id) {
+            if (oldSelectedDiceRow !== undefined && oldSelectedDiceRow.dataset.id === parentRow.dataset.id) {
                 // Previously selected row was deselected.
                 this.props.setSelectedDiceRow(undefined);
-                target.className = 'diceRow';
+                parentRow.className = 'diceRow row';
             } else {
-                if(typeof oldSelectedDiceRow !== 'undefined') {
-                    oldSelectedDiceRow.className = 'diceRow';
+                if (typeof oldSelectedDiceRow !== 'undefined') {
+                    oldSelectedDiceRow.className = 'diceRow row';
                 }
-                target.className = 'diceRowSelected';
+                parentRow.className = 'diceRowSelected row';
 
-                this.props.setSelectedDiceRow(target);
+                this.props.setSelectedDiceRow(parentRow);
             }
         }
     }
 
     render = () => {
         let diceListElements: Array<JSX.Element> = [];
+        let sum: number = 0;
         this.props.diceList.forEach((d, ind) => {
             diceListElements.push(<div key={ind.toString()}
-                                          data-id={ind}
-                                          className='diceRow'
-                                          onClick={this.handleDiceRowClick}>
-                                      {d.name} X{d.rollNumber} {d.sumResult ? d.sumResult : undefined}
-                                  </div>);
+                data-id={ind}
+                className='diceRow row'
+                onClick={this.handleDiceRowClick}>
+                <div className='col-3'>{d.name}</div>
+                <div className='col-3'>{d.rollNumber}</div>
+                <div className='col-3 resultCol'>{d.sumResult ? d.sumResult : undefined}</div>
+            </div>);
+
+            if (d.sumResult !== undefined) {
+                sum += d.sumResult;
+            }
         });
 
-        let contents: JSX.Element | Array<JSX.Element> = diceListElements.length === 0
-                ? <div className='diceRowNoSelect'>No dice added</div>
-                : diceListElements;
+        const isDiceListEmpty: boolean = diceListElements.length === 0;
+        const contents: JSX.Element | Array<JSX.Element> = isDiceListEmpty
+            ? <div className='diceRowNoSelect'>No dice added</div>
+            : diceListElements;
+
+        let totalDiv = undefined;
+        const rolled: boolean = this.props.diceList.filter(d => d.sumResult !== undefined).length !== 0;
+        if (rolled) {
+            totalDiv = <div className='row diceTotalRow'>
+                <div className='col-6 diceTotalTitle'>Total:</div>
+                <div className='col-3 resultCol'>{sum}</div>
+            </div>
+        }
 
         return (
             <div className='diceListContainer'>
                 <div className='title'>Dice list</div>
+                <div className='diceRowTitle row'>
+                    <div className='col-3'>Type</div>
+                    <div className='col-3'>Number</div>
+                    <div className='col-3 resultCol'>Result</div>
+                </div>
                 {contents}
+                {totalDiv}
             </div>
         );
     }
