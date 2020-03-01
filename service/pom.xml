@@ -39,6 +39,8 @@
 	</dependencies>
 
 	<build>
+		<finalName>DiceRoller-${project.version}</finalName>
+
 		<plugins>
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
