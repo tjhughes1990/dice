@@ -1,0 +1,84 @@
+:root {
+    --text-colour: #222;
+    --border-colour: #80bdff;
+    --border-shadow-colour: rgba(0,123,255,.25);
+    --err-colour: rgba(192,32,32,.75);
+    --err-shadow-colour: rgba(192,64,64,.5);
+}
+
+.diceModalSelect > div {
+    color:var(--text-colour);
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: .5rem;
+}
+
+.diceModalSelect > div:nth-of-type(1){
+    box-shadow: 0 0 0 0 var(--border-shadow-color)
+}
+
+.diceModalSelect > div:nth-of-type(2) > div {
+    padding: 0;
+}
+
+.diceModalSelect > div:nth-of-type(2) > div > div {
+    border-radius: .5rem;
+}
+
+.diceModalSelect > div:hover {
+    border: 1px solid var(--border-colour);
+}
+
+.diceModalSelect > div:focus {
+    border: 1px solid var(--border-color);
+}
+
+.diceModalCount {
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--text-colour);
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border-radius: .5rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.diceModalCount:hover {
+    border: 1px solid var(--border-colour);
+}
+
+.diceModalCount:focus {
+    border: 1px solid var(--border-colour);
+    box-shadow: 0 0 0 .2rem var(--border-shadow-colour);
+}
+
+.diceModalCountInvalid {
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--text-colour);
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border-radius: .5rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    box-shadow: 0 0 0 .2rem var(--err-shadow-colour);
+}
+
+.diceModalCountInvalid:hover {
+    border: 1px solid var(--err-colour);
+}
+
+.diceModalCountInvalid:focus {
+    border: 1px solid var(--err-colour);
+}

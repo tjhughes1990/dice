@@ -1,4 +1,12 @@
-*~
+# Java
 *.jar
 *.class
-*/target/
+**/target/
+
+# Cpp
+native/build
+*.dll
+*.so
+
+# Misc.
+.metadata
