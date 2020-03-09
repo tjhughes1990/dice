@@ -1,10 +1,10 @@
-package dice.service.application;
+package dice.database.application;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Main web application.
+ * Main database application.
  */
 @SpringBootApplication
 public class Application {

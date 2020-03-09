@@ -24,5 +24,5 @@ USER $USER
 WORKDIR /home/$USER
 
 # Copy and run jar.
-COPY ./service/target/DiceRoller-1.0.0.jar .
+COPY ./target/DiceRoller-1.0.0.jar .
 ENTRYPOINT ["java", "-jar", "DiceRoller-1.0.0.jar"]
