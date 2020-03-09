@@ -3,7 +3,7 @@ package dice.service.roll;
 import java.util.ArrayList;
 import java.util.List;
 
-import dice.service.types.IDiceRollType;
+import dice.common.types.IDiceRollType;
 
 /**
  * Roll aggregator.

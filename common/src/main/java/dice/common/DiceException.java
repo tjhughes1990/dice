@@ -1,4 +1,4 @@
-package dice.service.common;
+package dice.common;
 
 /**
  * Dice exception class.

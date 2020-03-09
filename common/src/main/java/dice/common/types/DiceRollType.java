@@ -1,6 +1,6 @@
-package dice.service.types;
+package dice.common.types;
 
-import dice.service.common.DiceException;
+import dice.common.DiceException;
 
 /**
  * Abstract dice type pojo.

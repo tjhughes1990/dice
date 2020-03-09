@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import dice.service.common.DiceException;
+import dice.common.DiceException;
+import dice.common.types.DiceRollType;
 import dice.service.roll.DiceRoller;
 import dice.service.roll.RollAggregator;
-import dice.service.types.DiceRollType;
 
 @RestController
 public class DiceController {
