@@ -9,11 +9,11 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import dice.service.common.DiceException;
+import dice.common.DiceException;
+import dice.common.types.DiceRollType;
+import dice.common.types.IDiceRollType;
 import dice.service.roll.DiceRoller;
 import dice.service.roll.RollAggregator;
-import dice.service.types.DiceRollType;
-import dice.service.types.IDiceRollType;
 
 /**
  * Tests the roller.

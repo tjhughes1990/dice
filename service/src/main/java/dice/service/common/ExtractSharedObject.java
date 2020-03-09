@@ -6,6 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
+import dice.common.DiceException;
+
 /**
  * Extract a shared object from the jar.
  */

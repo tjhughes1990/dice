@@ -1,4 +1,4 @@
-package dice.service.types;
+package dice.common.types;
 
 /**
  * Dice roll type interface.

@@ -9,8 +9,12 @@
 	<name>Dice Roller</name>
 
 	<modules>
-		<module>./pom-parent.xml</module>
+		<!-- C++ -->
 		<module>native</module>
+
+		<!-- Java -->
+		<module>./pom-parent.xml</module>
+		<module>common</module>
 		<module>database</module>
 		<module>service</module>
 	</modules>

@@ -4,9 +4,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import dice.service.common.DiceException;
+import dice.common.DiceException;
+import dice.common.types.IDiceRollType;
 import dice.service.common.ExtractSharedObject;
-import dice.service.types.IDiceRollType;
 
 public class DiceRoller {
 
