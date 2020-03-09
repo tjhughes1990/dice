@@ -2,6 +2,8 @@
 
 FROM archlinux:latest AS diceroller_java
 
+LABEL version="1.0.0"
+
 # Update and install git.
 RUN pacman -Syu --noconfirm
 
