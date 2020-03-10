@@ -1,5 +1,6 @@
 package dice.common.types;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -35,5 +36,6 @@ public interface IDiceRollType {
      * @param sum
      *            the sum result to set.
      */
+    @JsonIgnore
     void setSumResult(final int sum);
 }

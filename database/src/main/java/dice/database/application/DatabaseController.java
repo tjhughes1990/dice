@@ -2,9 +2,12 @@ package dice.database.application;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import dice.common.DiceException;
 import dice.common.types.DiceRollType;
+import dice.common.types.IdName;
 import dice.database.connection.DatabaseConnector;
 
 @RestController
@@ -40,6 +44,29 @@ public class DatabaseController {
         connection = DB_CONNECTOR.connect();
     }
 
+    /**
+     * Get a list of dice collections available in the database.
+     *
+     * @return a set of {@link IdName} objects corresponding to collections in the database.
+     */
+    @GetMapping(value = "getCollections", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Set<IdName> getCollections() {
+        final String sql = "SELECT id, name FROM dice.dice_collection";
+        try (final PreparedStatement statement = connection.prepareStatement(sql)) {
+            final ResultSet rs = statement.executeQuery();
+            final Set<IdName> idNameList = new HashSet<>();
+            while (rs.next()) {
+                idNameList.add(new IdName(rs.getLong(1), rs.getString(2)));
+            }
+
+            return idNameList;
+        } catch (final SQLException e) {
+            final String errMsg = "Failed to read dice collections from database";
+            LOG.error(errMsg, e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, errMsg, e);
+        }
+    }
+
     @PostMapping(value = "saveDice",
                  consumes = MediaType.APPLICATION_JSON_VALUE,
                  produces = MediaType.APPLICATION_JSON_VALUE)
@@ -55,18 +82,34 @@ public class DatabaseController {
         }
     }
 
+    /**
+     * Load a set of dice from the database.
+     *
+     * @param id
+     *            the ID of the dice collection to load.
+     *
+     * @return the collection of dice.
+     */
     @GetMapping(value = "loadDice", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<DiceRollType> loadDice(@RequestParam(value = "id", required = true) final long id) {
-        // TODO
-        final String sql = "";
+        final String sql = "SELECT min_result, max_result, roll_number FROM dice.dice WHERE collection_id = " + id;
         try (final PreparedStatement statement = connection.prepareStatement(sql)) {
-            // TODO
-            System.out.println("LOAD DICE");
+            final ResultSet rs = statement.executeQuery();
+            final List<DiceRollType> diceRolls = new ArrayList<>();
+            while (rs.next()) {
+                final DiceRollType drt = new DiceRollType();
+                drt.setMinResult(rs.getInt(1));
+                drt.setMaxResult(rs.getInt(2));
+                drt.setRollNumber(rs.getInt(3));
+
+                diceRolls.add(drt);
+            }
+
+            return diceRolls;
         } catch (final SQLException e) {
             final String errMsg = "Failed to load dice collection from database";
             LOG.error(errMsg, e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, errMsg, e);
         }
-        return Collections.emptyList();
     }
 }
