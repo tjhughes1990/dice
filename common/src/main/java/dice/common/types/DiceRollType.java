@@ -1,5 +1,7 @@
 package dice.common.types;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import dice.common.DiceException;
 
 /**
@@ -11,6 +13,7 @@ public class DiceRollType implements IDiceRollType {
     private int maxResult;
     private int rollNumber;
 
+    @JsonIgnore
     private volatile int sumResult = -1;
 
     /**

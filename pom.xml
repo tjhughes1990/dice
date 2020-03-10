@@ -8,14 +8,31 @@
 	<packaging>pom</packaging>
 	<name>Dice Roller</name>
 
-	<modules>
-		<!-- C++ -->
-		<module>native</module>
+	<profiles>
+		<profile>
+			<id>build</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 
-		<!-- Java -->
-		<module>./pom-parent.xml</module>
-		<module>common</module>
-		<module>database</module>
-		<module>service</module>
-	</modules>
+			<modules>
+				<!-- C++ -->
+				<module>native</module>
+
+				<!-- Java -->
+				<module>./pom-parent.xml</module>
+				<module>common</module>
+				<module>database</module>
+				<module>service</module>
+			</modules>
+		</profile>
+
+		<profile>
+			<id>systemTests</id>
+
+			<modules>
+				<module>test</module>
+			</modules>
+		</profile>
+	</profiles>
 </project>

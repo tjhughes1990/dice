@@ -1,18 +1,22 @@
 package dice.service.application;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.security.NoSuchAlgorithmException;
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import javax.net.ssl.SSLContext;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,10 +24,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dice.common.DiceException;
 import dice.common.types.DiceRollCollection;
 import dice.common.types.DiceRollType;
+import dice.common.types.IdName;
 import dice.service.roll.DiceRoller;
 import dice.service.roll.RollAggregator;
 
@@ -31,7 +39,12 @@ import dice.service.roll.RollAggregator;
 public class DiceController {
 
     private static final String DB_URL_ROOT = "http://db:8081/";
+    private static final String DB_GET_COLLECTIONS_URL = DB_URL_ROOT + "getCollections";
     private static final String DB_LOAD_URL = DB_URL_ROOT + "loadDice?id=";
+
+    private static final String DESERIALISE_ERR_MSG = "Failed to deserialise response";
+
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private final HttpClient httpClient;
     private final DiceRoller diceRoller;
@@ -74,6 +87,27 @@ public class DiceController {
     }
 
     /**
+     * Get a list of dice collections available in the database.
+     *
+     * @return a set of {@link IdName} objects corresponding to collections in the database.
+     *
+     * @throws DiceException
+     *             if the response could not be deserialised.
+     */
+    @GetMapping(value = "/getCollections", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Set<IdName> getCollections() throws DiceException {
+        final URI uri = URI.create(DB_GET_COLLECTIONS_URL);
+        final HttpRequest request = HttpRequest.newBuilder(uri).GET().build();
+        final byte[] bytes = sendRequest(request);
+
+        try {
+            return new HashSet<>(Arrays.asList(OBJECT_MAPPER.readValue(bytes, IdName[].class)));
+        } catch (final IOException e) {
+            throw new DiceException(DESERIALISE_ERR_MSG, e);
+        }
+    }
+
+    /**
      * Save a list of dice to the database.
      *
      * @param diceRollCollection
@@ -106,10 +140,20 @@ public class DiceController {
 
         final URI uri = URI.create(DB_LOAD_URL + collectionId);
         final HttpRequest request = HttpRequest.newBuilder(uri).GET().build();
-        sendRequest(request);
+        final byte[] bytes = sendRequest(request);
 
-        // TODO
-        return Collections.emptyList();
+        try {
+            final List<DiceRollType> diceRolls = Arrays.asList(OBJECT_MAPPER.readValue(bytes, DiceRollType[].class));
+            if (diceRolls.isEmpty()) {
+                // Return a "No content" status if there were no dice for a given ID. Either the
+                // collection contains no dice, or the ID doesn't appear in the database.
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+            }
+
+            return diceRolls;
+        } catch (final IOException e) {
+            throw new DiceException(DESERIALISE_ERR_MSG, e);
+        }
     }
 
     /**

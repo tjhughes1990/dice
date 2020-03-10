@@ -2,46 +2,37 @@ package dice.common.types;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Collection of dice with a name.
+ * Id name extension with a list of dice types.
  */
-public class DiceRollCollection {
+public class DiceRollCollection extends IdName {
 
-    private final long id;
-    private final String collectionName;
-    private final List<IDiceRollType> diceRollTypes;
+    private final List<DiceRollType> diceRolls;
 
-    @JsonCreator
+    /**
+     * Constructor.
+     *
+     * @param id
+     *            the collection ID.
+     * @param name
+     *            the collection name.
+     * @param diceRolls
+     *            the collection of dice rolls.
+     */
     public DiceRollCollection(@JsonProperty(value = "id", required = true) final long id,
-            @JsonProperty(value = "collection_name", required = true) final String collectionName,
-            @JsonProperty(value = "diceRollTypes", required = true) final List<IDiceRollType> diceRollTypes) {
+            @JsonProperty(value = "name", required = true) final String name,
+            @JsonProperty(value = "diceRolls", required = true) final List<DiceRollType> diceRolls) {
 
-        this.id = id;
-        this.collectionName = collectionName;
-        this.diceRollTypes = diceRollTypes;
+        super(id, name);
+        this.diceRolls = diceRolls;
     }
 
     /**
-     * @return id.
+     * @return diceRolls.
      */
-    public long getId() {
-        return id;
-    }
-
-    /**
-     * @return diceRollTypes.
-     */
-    public List<IDiceRollType> getDiceRollTypes() {
-        return diceRollTypes;
-    }
-
-    /**
-     * @return collectionName.
-     */
-    public String getName() {
-        return collectionName;
+    public List<DiceRollType> getDiceRolls() {
+        return diceRolls;
     }
 }
