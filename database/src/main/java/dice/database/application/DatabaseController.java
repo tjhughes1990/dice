@@ -15,11 +15,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import dice.common.DiceException;
+import dice.common.types.DiceRollCollection;
 import dice.common.types.DiceRollType;
 import dice.common.types.IdName;
 import dice.database.connection.DatabaseConnector;
@@ -67,10 +69,14 @@ public class DatabaseController {
         }
     }
 
-    @PostMapping(value = "saveDice",
-                 consumes = MediaType.APPLICATION_JSON_VALUE,
-                 produces = MediaType.APPLICATION_JSON_VALUE)
-    public void saveDice(final List<DiceRollType> diceList) {
+    /**
+     * Save a new dice collection to the database.
+     *
+     * @param diceRollCollection
+     *            the dice collection to save.
+     */
+    @PostMapping(value = "saveDice", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void saveDice(@RequestBody final DiceRollCollection diceRollCollection) {
         // TODO
         final String sql = "";
         try (final PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -79,6 +85,26 @@ public class DatabaseController {
             final String errMsg = "Failed to save dice collection to database";
             LOG.error(errMsg, e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, errMsg, e);
+        }
+    }
+
+    /**
+     * Delete a dice collection from the database.
+     *
+     * @param id
+     *            the collection ID to remove from the database.
+     *
+     * @throws DiceException
+     *             if the collection could not be removed.
+     */
+    @GetMapping(value = "/deleteDice")
+    public void deleteDice(@RequestParam(value = "id", required = true) final long id) throws DiceException {
+        // TODO
+        final String sql = "DELETE FROM dice.dice_collection WHERE id = " + id;
+        try (final PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.executeQuery();
+        } catch (final SQLException e) {
+            throw new DiceException("Failed to delete collection", e);
         }
     }
 

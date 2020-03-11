@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -40,6 +41,8 @@ public class DiceController {
 
     private static final String DB_URL_ROOT = "http://db:8081/";
     private static final String DB_GET_COLLECTIONS_URL = DB_URL_ROOT + "getCollections";
+    private static final String DB_SAVE_URL = DB_URL_ROOT + "saveDice";
+    private static final String DB_DELETE_URL = DB_URL_ROOT + "deleteDice?id=";
     private static final String DB_LOAD_URL = DB_URL_ROOT + "loadDice?id=";
 
     private static final String DESERIALISE_ERR_MSG = "Failed to deserialise response";
@@ -113,14 +116,39 @@ public class DiceController {
      * @param diceRollCollection
      *            the collection of dice to save to the database.
      *
-     * @return {@code true} iff the dice collection was successfully saved to the database.
+     * @throws DiceException
+     *             if the collection could not be saved to the database.
      */
-    @PostMapping(value = "/save",
-                 consumes = MediaType.APPLICATION_JSON_VALUE,
-                 produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody boolean save(@RequestBody final DiceRollCollection diceRollCollection) {
-        // TODO
-        return false;
+    @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody void save(@RequestBody final DiceRollCollection diceRollCollection) throws DiceException {
+        final URI uri = URI.create(DB_SAVE_URL);
+
+        // Serialise dice collection.
+        final String body;
+        try {
+            body = OBJECT_MAPPER.writeValueAsString(diceRollCollection);
+        } catch (final IOException e) {
+            throw new DiceException("Failed to serialise dice collection");
+        }
+
+        final HttpRequest request = HttpRequest.newBuilder(uri).POST(BodyPublishers.ofString(body)).build();
+        sendRequest(request);
+    }
+
+    /**
+     * Remove a dice collection from the database.
+     *
+     * @param collectionId
+     *            the ID of the collection to remove from the database.
+     *
+     * @throws DiceException
+     *             if the collection could not be deleted.
+     */
+    @GetMapping(value = "/delete")
+    public void delete(@RequestParam(value = "id", required = true) final long collectionId) throws DiceException {
+        final URI uri = URI.create(DB_DELETE_URL + collectionId);
+        final HttpRequest request = HttpRequest.newBuilder(uri).GET().build();
+        sendRequest(request);
     }
 
     /**
