@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
+import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -17,6 +18,7 @@ import java.util.concurrent.TimeoutException;
 
 import javax.net.ssl.SSLContext;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -131,7 +133,8 @@ public class DiceController {
             throw new DiceException("Failed to serialise dice collection");
         }
 
-        final HttpRequest request = HttpRequest.newBuilder(uri).POST(BodyPublishers.ofString(body)).build();
+        final HttpRequest request = HttpRequest.newBuilder(uri).POST(BodyPublishers.ofString(body))
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).build();
         sendRequest(request);
     }
 
@@ -195,11 +198,19 @@ public class DiceController {
      * @throws DiceException
      *             if the request timed out.
      */
-    private byte[] sendRequest(final HttpRequest request) throws DiceException {
+    private byte[] sendRequest(final HttpRequest request) {
         try {
-            return httpClient.sendAsync(request, BodyHandlers.ofByteArray()).get(10, TimeUnit.SECONDS).body();
+            final HttpResponse<byte[]> response = httpClient.sendAsync(request, BodyHandlers.ofByteArray()).get(10,
+                    TimeUnit.SECONDS);
+            if (HttpStatus.OK.value() != response.statusCode()) {
+                throw new ResponseStatusException(HttpStatus.valueOf(response.statusCode()),
+                        "Database REST call failed");
+            }
+
+            return response.body();
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            throw new DiceException("Response not received from REST request", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Response not received from REST request", e);
         }
     }
 }

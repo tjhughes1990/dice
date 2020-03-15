@@ -8,11 +8,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class IdName {
 
-    private final long id;
+    private final Long id;
     private final String name;
 
     @JsonCreator
-    public IdName(@JsonProperty(value = "id", required = true) final long id,
+    public IdName(@JsonProperty(value = "id", required = true) final Long id,
             @JsonProperty(value = "name", required = true) final String name) {
 
         this.id = id;
@@ -22,7 +22,7 @@ public class IdName {
     /**
      * @return id.
      */
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
