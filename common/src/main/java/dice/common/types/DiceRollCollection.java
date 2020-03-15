@@ -2,6 +2,7 @@ package dice.common.types;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -21,7 +22,8 @@ public class DiceRollCollection extends IdName {
      * @param diceRolls
      *            the collection of dice rolls.
      */
-    public DiceRollCollection(@JsonProperty(value = "id", required = true) final long id,
+    @JsonCreator
+    public DiceRollCollection(@JsonProperty(value = "id", required = true) final Long id,
             @JsonProperty(value = "name", required = true) final String name,
             @JsonProperty(value = "diceRolls", required = true) final List<DiceRollType> diceRolls) {
 

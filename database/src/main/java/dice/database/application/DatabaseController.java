@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -34,6 +35,16 @@ public class DatabaseController {
     private static final String DB_PROPS_PATH = "database.env";
     private static final DatabaseConnector DB_CONNECTOR = new DatabaseConnector(DB_PROPS_PATH);
 
+    private static final String COLLECTION_TABLE_NAME = "dice.dice_collection";
+    private static final String DICE_TABLE_NAME = "dice.dice";
+    private static final String COLLECTION_ID_COL = "id";
+    private static final String COLLECTION_NAME_COL = "name";
+    private static final List<String> DICE_COL_NAMES = List.of("id", "collection_id", "min_result", "max_result",
+            "roll_number");
+
+    private static final String DELIM = ",";
+    private static final Set<String> RESTRICTED_CHARS = Set.of(";", "*", "\\", "#");
+
     private final Connection connection;
 
     /**
@@ -53,7 +64,8 @@ public class DatabaseController {
      */
     @GetMapping(value = "getCollections", produces = MediaType.APPLICATION_JSON_VALUE)
     public Set<IdName> getCollections() {
-        final String sql = "SELECT id, name FROM dice.dice_collection";
+        final String sql = "SELECT " + String.join(DELIM, List.of(COLLECTION_ID_COL, COLLECTION_NAME_COL)) + " FROM "
+                + COLLECTION_TABLE_NAME;
         try (final PreparedStatement statement = connection.prepareStatement(sql)) {
             final ResultSet rs = statement.executeQuery();
             final Set<IdName> idNameList = new HashSet<>();
@@ -76,15 +88,80 @@ public class DatabaseController {
      *            the dice collection to save.
      */
     @PostMapping(value = "saveDice", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void saveDice(@RequestBody final DiceRollCollection diceRollCollection) {
-        // TODO
-        final String sql = "";
-        try (final PreparedStatement statement = connection.prepareStatement(sql)) {
-            System.out.println("SAVE DICE");
+    public void saveDice(@RequestBody(required = true) final DiceRollCollection diceRollCollection) {
+        validateDiceCollection(diceRollCollection);
+
+        final String collectionSql = "INSERT INTO " + COLLECTION_TABLE_NAME + " (" + COLLECTION_NAME_COL
+                + ") VALUES (?);";
+        final long id;
+        try (final PreparedStatement statement = connection.prepareStatement(collectionSql,
+                Statement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, diceRollCollection.getName());
+            statement.executeUpdate();
+            final ResultSet keyResultSet = statement.getGeneratedKeys();
+            if (!keyResultSet.next()) {
+                throw new SQLException("Failed to insert new dice collection to database");
+            }
+
+            id = keyResultSet.getLong(1);
         } catch (final SQLException e) {
             final String errMsg = "Failed to save dice collection to database";
             LOG.error(errMsg, e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, errMsg, e);
+        }
+
+        // Insert individual dice.
+        final String diceSql = "INSERT INTO " + DICE_TABLE_NAME + " ("
+                + String.join(DELIM, DICE_COL_NAMES.subList(1, 5)) + ") VALUES (?,?,?,?);";
+        try (final PreparedStatement statement = connection.prepareStatement(diceSql)) {
+            for (final DiceRollType diceRoll : diceRollCollection.getDiceRolls()) {
+                statement.setLong(1, id);
+                statement.setInt(2, diceRoll.getMinResult());
+                statement.setInt(3, diceRoll.getMaxResult());
+                statement.setInt(4, diceRoll.getRollNumber());
+                statement.addBatch();
+            }
+            statement.executeBatch();
+        } catch (final SQLException e) {
+            final String errMsg = "Failed to save dice collection to database";
+            LOG.error(errMsg, e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, errMsg, e);
+        }
+    }
+
+    /**
+     * Check that the dice collection being added is valid.
+     *
+     * @param diceRollCollection
+     *            the dice collection to validate.
+     *
+     * @throws ResponseStatusException
+     *             if the collection is invalid.
+     */
+    private static void validateDiceCollection(final DiceRollCollection diceRollCollection)
+            throws ResponseStatusException {
+        if (diceRollCollection == null) {
+            final String errMsg = "Collection was null";
+            LOG.error(errMsg);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errMsg);
+        }
+
+        final String name = diceRollCollection.getName();
+        if (name == null || name.isEmpty() || name.isBlank()) {
+            final String errMsg = "Collection name was empty or null";
+            LOG.error(errMsg);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errMsg);
+        } else if (RESTRICTED_CHARS.parallelStream().anyMatch(c -> name.contains(c))) {
+            final String errMsg = "Collection contained illegal characters";
+            LOG.error(errMsg);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errMsg);
+        }
+
+        final List<DiceRollType> diceRolls = diceRollCollection.getDiceRolls();
+        if (diceRolls == null || diceRolls.isEmpty()) {
+            final String errMsg = "Collection contained no rolls";
+            LOG.error(errMsg);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errMsg);
         }
     }
 
@@ -98,11 +175,11 @@ public class DatabaseController {
      *             if the collection could not be removed.
      */
     @GetMapping(value = "/deleteDice")
-    public void deleteDice(@RequestParam(value = "id", required = true) final long id) throws DiceException {
-        // TODO
-        final String sql = "DELETE FROM dice.dice_collection WHERE id = " + id;
+    public void deleteDice(@RequestParam(value = COLLECTION_ID_COL, required = true) final long id)
+            throws DiceException {
+        final String sql = "DELETE FROM " + COLLECTION_TABLE_NAME + " WHERE " + COLLECTION_ID_COL + " = " + id;
         try (final PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.executeQuery();
+            statement.executeUpdate();
         } catch (final SQLException e) {
             throw new DiceException("Failed to delete collection", e);
         }
@@ -117,8 +194,10 @@ public class DatabaseController {
      * @return the collection of dice.
      */
     @GetMapping(value = "loadDice", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<DiceRollType> loadDice(@RequestParam(value = "id", required = true) final long id) {
-        final String sql = "SELECT min_result, max_result, roll_number FROM dice.dice WHERE collection_id = " + id;
+    public List<DiceRollType> loadDice(@RequestParam(value = COLLECTION_ID_COL, required = true) final long id) {
+        final String sql = "SELECT " + String.join(DELIM, DICE_COL_NAMES.subList(2, 5)) + " FROM " + DICE_TABLE_NAME
+                + " WHERE " + DICE_COL_NAMES.get(1) + " = " + id;
+
         try (final PreparedStatement statement = connection.prepareStatement(sql)) {
             final ResultSet rs = statement.executeQuery();
             final List<DiceRollType> diceRolls = new ArrayList<>();
