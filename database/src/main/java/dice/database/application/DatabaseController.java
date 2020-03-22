@@ -202,16 +202,16 @@ public class DatabaseController {
             final ResultSet rs = statement.executeQuery();
             final List<DiceRollType> diceRolls = new ArrayList<>();
             while (rs.next()) {
-                final DiceRollType drt = new DiceRollType();
-                drt.setMinResult(rs.getInt(1));
-                drt.setMaxResult(rs.getInt(2));
-                drt.setRollNumber(rs.getInt(3));
+                final int minResult = rs.getInt(1);
+                final int maxResult = rs.getInt(2);
+                final int rollNumber = rs.getInt(3);
 
+                final DiceRollType drt = new DiceRollType(minResult, maxResult, rollNumber);
                 diceRolls.add(drt);
             }
 
             return diceRolls;
-        } catch (final SQLException e) {
+        } catch (final SQLException | DiceException e) {
             final String errMsg = "Failed to load dice collection from database";
             LOG.error(errMsg, e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, errMsg, e);

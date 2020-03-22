@@ -1,20 +1,23 @@
 package dice.common.types;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import dice.common.DiceException;
 
 /**
  * Abstract dice type pojo.
  */
-public class DiceRollType implements IDiceRollType {
+@JsonInclude(Include.NON_NULL)
+public class DiceRollType extends IdName implements IDiceRollType {
 
-    private int minResult;
-    private int maxResult;
-    private int rollNumber;
+    private final int minResult;
+    private final int maxResult;
+    private final int rollNumber;
 
-    @JsonIgnore
-    private volatile int sumResult = -1;
+    // Can be set from the native C++ code via JNI.
+    private volatile Integer sumResult;
 
     /**
      * Constructor.
@@ -30,6 +33,33 @@ public class DiceRollType implements IDiceRollType {
      *             if the supplied arguments were invalid.
      */
     public DiceRollType(final int minResult, final int maxResult, final int rollNumber) throws DiceException {
+        this(null, null, minResult, maxResult, rollNumber);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param id
+     *            the dice id.
+     * @param name
+     *            the dice name.
+     * @param minResult
+     *            the min dice result.
+     * @param maxResult
+     *            the max dice result.
+     * @param rollNumber
+     *            the number of rolls.
+     *
+     * @throws DiceException
+     *             if the supplied arguments were invalid.
+     */
+    public DiceRollType(@JsonProperty(value = "id", required = true) final Long id,
+            @JsonProperty(value = "name", required = true) final String name,
+            @JsonProperty(value = "minResult", required = true) final int minResult,
+            @JsonProperty(value = "maxResult", required = true) final int maxResult,
+            @JsonProperty(value = "rollNumber", required = true) final int rollNumber) throws DiceException {
+
+        super(id, name);
         if (minResult < 0 || minResult >= maxResult || rollNumber <= 0) {
             throw new DiceException("Invalid dice configuration specified");
         }
@@ -37,12 +67,7 @@ public class DiceRollType implements IDiceRollType {
         this.minResult = minResult;
         this.maxResult = maxResult;
         this.rollNumber = rollNumber;
-    }
-
-    /**
-     * Empty constructor used by Spring.
-     */
-    public DiceRollType() {
+        sumResult = null;
     }
 
     @Override
@@ -50,25 +75,9 @@ public class DiceRollType implements IDiceRollType {
         return minResult;
     }
 
-    /**
-     * @param minResult
-     *            the min result to set.
-     */
-    public void setMinResult(final int minResult) {
-        this.minResult = minResult;
-    }
-
     @Override
     public int getMaxResult() {
         return maxResult;
-    }
-
-    /**
-     * @param maxResult
-     *            the max result to set.
-     */
-    public void setMaxResult(final int maxResult) {
-        this.maxResult = maxResult;
     }
 
     @Override
@@ -76,21 +85,13 @@ public class DiceRollType implements IDiceRollType {
         return rollNumber;
     }
 
-    /**
-     * @param rollNumber
-     *            the roll number to set.
-     */
-    public void setRollNumber(final int rollNumber) {
-        this.rollNumber = rollNumber;
-    }
-
     @Override
     public Integer getSumResult() {
-        return sumResult == -1 ? null : sumResult;
+        return sumResult;
     }
 
     @Override
     public void setSumResult(final int sumResult) {
-        this.sumResult = sumResult;
+        this.sumResult = sumResult == -1 ? null : sumResult;
     }
 }

@@ -1,31 +1,28 @@
 import * as React from 'react';
-
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 import { ReactSVG } from 'react-svg';
+
 import { default as ButtonContainer } from './containers/ButtonContainer';
 import { default as DiceListContainer } from './containers/DiceListContainer';
 import { default as AddDiceModal } from './containers/AddDiceModal';
-import { Dice } from './Dice';
-import { default as RestEndpoint } from './endpoints/RestEndpoint';
+import { RootReducer } from './reducers/RootReducer';
+import { createRemoveAction } from './actions/ActionType';
+
 import './App.css';
 
-interface IState {
-    diceList: Array<Dice>;
+export interface IState {
     selectedDiceRow: HTMLDivElement | undefined;
     showAddDiceModal: boolean;
 }
 
 export default class App extends React.Component<{}, IState> {
 
-    public readonly state = {
-        diceList: [],
+    readonly store = createStore(RootReducer);
+
+    readonly state = {
         selectedDiceRow: undefined,
         showAddDiceModal: false
-    }
-
-    handleAddDice = (dice: Dice) => {
-        let diceList: Array<Dice> = this.state.diceList;
-        diceList.push(dice);
-        this.setState({ 'diceList': diceList, 'showAddDiceModal': false });
     }
 
     handleRemoveDice = () => {
@@ -33,25 +30,13 @@ export default class App extends React.Component<{}, IState> {
             const row: HTMLDivElement = this.state.selectedDiceRow!;
             const id: string | undefined = row.dataset.id;
             if (typeof id === 'string') {
-                const oldDiceList = this.state.diceList;
-                oldDiceList.splice(parseInt(id), 1);
-                this.setState({ 'diceList': oldDiceList, 'selectedDiceRow': undefined });
+                const index: number = parseInt(id);
+                this.setState({ 'selectedDiceRow': undefined });
                 row.className = 'diceRow row';
+
+                this.store.dispatch(createRemoveAction(index));
             }
         }
-    }
-
-    handleRollDice = () => {
-        RestEndpoint.rollDice(this.state.diceList).then(newDiceList=> {
-            let combinedDiceList = this.state.diceList;
-            for (let i = 0; i < combinedDiceList.length; i++) {
-                if (newDiceList[i].sumResult) {
-                    let dice: Dice = combinedDiceList[i];
-                    dice.sumResult = newDiceList[i].sumResult;
-                }
-            }
-            this.setState({ 'diceList': combinedDiceList });
-        });
     }
 
     setSelectedDiceRow = (row: HTMLDivElement) => {
@@ -69,26 +54,27 @@ export default class App extends React.Component<{}, IState> {
     render = () => {
         return (
             <div className='App'>
-                <AddDiceModal handleAddDice={this.handleAddDice}
-                    handleCancel={this.hideAddDiceModal}
-                    show={this.state.showAddDiceModal} />
-                <div className='titleBar row'>
-                    <ReactSVG className='diceIcon' src='d20-white.svg' beforeInjection={svg => {
-                        svg.setAttribute('style', 'width: 50px')
-                    }} />
-                    <div>Dice Roller</div>
-                </div>
+                <Provider store={this.store}>
+                    <AddDiceModal store={this.store}
+                        handleCancel={this.hideAddDiceModal}
+                        show={this.state.showAddDiceModal} />
+                    <div className='titleBar row'>
+                        <ReactSVG className='diceIcon' src='d20-white.svg' beforeInjection={svg => {
+                            svg.setAttribute('style', 'width: 50px')
+                        }} />
+                        <div>Dice Roller</div>
+                    </div>
 
-                <div className='row'>
-                    <ButtonContainer diceCount={this.state.diceList.length}
-                        handleAddDice={this.showAddDiceModal}
-                        handleRemoveDice={this.handleRemoveDice}
-                        handleRollDice={this.handleRollDice}
-                        selectedDiceRowInd={this.state.selectedDiceRow} />
-                    <DiceListContainer diceList={this.state.diceList}
-                        selectedDiceRow={this.state.selectedDiceRow}
-                        setSelectedDiceRow={this.setSelectedDiceRow} />
-                </div>
+                    <div className='row'>
+                        <ButtonContainer store={this.store}
+                            handleAddDice={this.showAddDiceModal}
+                            handleRemoveDice={this.handleRemoveDice}
+                            selectedDiceRowInd={this.state.selectedDiceRow} />
+                        <DiceListContainer
+                            selectedDiceRow={this.state.selectedDiceRow}
+                            setSelectedDiceRow={this.setSelectedDiceRow} />
+                    </div>
+                </Provider>
             </div>
         );
     }

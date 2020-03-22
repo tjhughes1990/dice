@@ -1,5 +1,6 @@
 export type Dice = {
-    name?: string;
+    id: number
+    name: string;
     minResult: number;
     maxResult: number;
     rollNumber: number;
