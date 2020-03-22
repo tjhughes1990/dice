@@ -1,15 +1,22 @@
 import React, { Component, MouseEvent } from 'react';
+import { connect } from 'react-redux';
 
-import './DiceListContainer.css';
+import { IState } from '../reducers/IState';
 import { Dice } from '../Dice';
 
+import './DiceListContainer.css';
+
 interface DiceListProps {
-    diceList: Array<Dice>;
+    diceList: Array<Dice>
     setSelectedDiceRow: any;
     selectedDiceRow: HTMLDivElement | undefined;
 }
 
-export default class DiceListContainer extends Component<DiceListProps, {}> {
+function mapStateToProps(state: IState) {
+    return { diceList: state.diceList };
+}
+
+class DiceListContainer extends Component<DiceListProps, {}> {
 
     /**
      * Handle clicking a row.
@@ -80,3 +87,5 @@ export default class DiceListContainer extends Component<DiceListProps, {}> {
         );
     }
 }
+
+export default connect(mapStateToProps)(DiceListContainer);

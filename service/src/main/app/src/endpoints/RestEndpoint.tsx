@@ -4,6 +4,7 @@ import { Dice } from '../Dice';
 
 export default class RestEndpoint extends Component {
     static rollDice = async (request: Array<Dice>) => {
+
         const requestBody: string = JSON.stringify(request);
 
         const requestUrl = 'http://localhost:8080/roll';

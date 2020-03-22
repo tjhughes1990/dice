@@ -1,11 +1,14 @@
 import React, { Component, ChangeEvent } from 'react';
-
-import Modal from 'react-bootstrap/Modal';
+import { Store } from 'redux';
 import Select, { OptionTypeBase } from 'react-select';
+import Modal from 'react-bootstrap/Modal';
+
+import { createAddAction } from '../actions/ActionType';
+
 import './AddDiceModal.css';
 
 interface AddDiceModalProps {
-    handleAddDice: any;
+    store: Store;
     handleCancel: any;
     show: boolean;
 }
@@ -48,13 +51,20 @@ export default class AddDiceModal extends Component<AddDiceModalProps, IState> {
 
 
     handleAddDice = () => {
-        let value = this.state.type.value;
-        this.props.handleAddDice({
+        const value = this.state.type.value;
+        const store: Store = this.props.store;
+        const id:number = this.props.store.getState().diceList.length;
+
+         store.dispatch(createAddAction({
+            'id': id,
             'name': value.name,
             'minResult': value.minResult,
             'maxResult': value.maxResult,
             'rollNumber': this.state.count
-         });
+         }));
+
+        // Hide the modal.
+         this.props.handleCancel();
     }
 
     validateCount = (text: string) => {

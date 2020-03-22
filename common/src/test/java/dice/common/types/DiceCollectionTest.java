@@ -1,6 +1,8 @@
 package dice.common.types;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -21,6 +23,8 @@ import dice.common.DiceException;
 public class DiceCollectionTest {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
+    private static final String DICE_LIST_JSON = "[{\"id\":0,\"name\":\"D10\",\"minResult\":1,\"maxResult\":10,\"rollNumber\":1},{\"id\":1,\"name\":\"D12\",\"minResult\":1,\"maxResult\":12,\"rollNumber\":1}]";
+
     private static final long TEST_ID = 1L;
     private static final String TEST_NAME = "Test name";
     private static final List<DiceRollType> TEST_ROLLS;
@@ -34,21 +38,27 @@ public class DiceCollectionTest {
 
     @Test
     public void deserialiseCollectionTest() throws IOException {
-        final String json = "{\"id\":1,\"name\":\"Test name\",\"diceRolls\":[{\"type\":\"DiceRollType\",\"minResult\":1,\"maxResult\":6,\"rollNumber\":1}]}";
+        final String json = "{\"id\":1,\"name\":\"Test name\",\"diceRolls\":" + DICE_LIST_JSON + "}";
 
-        MAPPER.readValue(json.getBytes(), DiceRollCollection.class);
+        final DiceRollCollection diceCollection = MAPPER.readValue(json.getBytes(), DiceRollCollection.class);
+        assertNotNull(diceCollection);
+
+        final List<DiceRollType> diceRolls = diceCollection.getDiceRolls();
+        assertNotNull(diceRolls);
+        assertEquals(2, diceRolls.size());
+        assertNull(diceRolls.get(0).getSumResult());
     }
 
     @Test
     public void deserialiseNullIdTest() throws IOException {
-        final String json = "{\"id\":null,\"name\":\"Test collection\",\"diceRolls\":[{\"type\":\"DiceRollType\",\"minResult\":1,\"maxResult\":10,\"rollNumber\":1},{\"type\":\"DiceRollType\",\"minResult\":1,\"maxResult\":12,\"rollNumber\":1}]}";
+        final String json = "{\"id\":null,\"name\":\"Test collection\",\"diceRolls\":" + DICE_LIST_JSON + "}";
 
         MAPPER.readValue(json.getBytes(), DiceRollCollection.class);
     }
 
     @Test
     public void deserialiseMissingIdTest() throws IOException {
-        final String json = "{\"name\":\"Test collection\",\"diceRolls\":[{\"type\":\"DiceRollType\",\"minResult\":1,\"maxResult\":10,\"rollNumber\":1},{\"type\":\"DiceRollType\",\"minResult\":1,\"maxResult\":12,\"rollNumber\":1}]}";
+        final String json = "{\"name\":\"Test collection\",\"diceRolls\":" + DICE_LIST_JSON + "}";
 
         try {
             MAPPER.readValue(json.getBytes(), DiceRollCollection.class);

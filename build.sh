@@ -2,10 +2,13 @@
 
 # Run full build.
 mvn clean install
+if [[ $? -ne 0 ]]; then
+    echo "ERROR: Maven build failed. Skipping system tests. . ."
+    exit 1
+fi
 
 # Initialise docker containers. Containers must be run as root.
 sudo docker-compose up --build -d
-
 if [[ $? -ne 0 ]]; then
 	echo "ERROR: could not run docker as root. Skipping system tests. . ."
 	exit 1
