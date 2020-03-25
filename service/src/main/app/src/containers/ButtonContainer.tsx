@@ -21,6 +21,10 @@ export default class ButtonContainer extends React.Component<ButtonProps, any> {
         });
     }
 
+    handleLoadDice = () => {
+        RestEndpoint.getCollections().then(json => console.log(json));
+    }
+
     render = () => {
         const diceCount: number = this.props.store.getState().diceList.length;
         
@@ -45,6 +49,7 @@ export default class ButtonContainer extends React.Component<ButtonProps, any> {
                             disabled={diceCount <= 0}>Roll</button>
                     </div>
                 </div>
+
                 <div className='buttonContainer'>
                     <div className='row'>
                         <button type='button'
@@ -55,7 +60,7 @@ export default class ButtonContainer extends React.Component<ButtonProps, any> {
                     <div className='row'>
                         <button type='button'
                             className='btn btn-primary'
-                            onClick={undefined}>Load dice</button>
+                            onClick={this.handleLoadDice}>Load dice</button>
                     </div>
                     <div className='row'>
                         <button type='button'

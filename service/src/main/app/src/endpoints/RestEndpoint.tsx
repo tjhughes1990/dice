@@ -3,21 +3,57 @@ import { Component } from 'react';
 import { Dice } from '../Dice';
 
 export default class RestEndpoint extends Component {
+
+    static readonly rootUrl: string = 'http://localhost:8080/';
+
+    /**
+     * Roll dice REST request.
+     */
     static rollDice = async (request: Array<Dice>) => {
 
+        const requestUrl: string = RestEndpoint.rootUrl + 'roll';
         const requestBody: string = JSON.stringify(request);
 
-        const requestUrl = 'http://localhost:8080/roll';
+        return RestEndpoint.post(requestUrl, requestBody).then(response => response.json());
+    }
+
+    /**
+     * Send a POST request.
+     */
+    static post = async (url: string, body: string) => {
         const requestHeaders: HeadersInit = new Headers();
         requestHeaders.append('Accept', 'application/json');
-        requestHeaders.append('Content-Length', requestBody.length.toString());
+        requestHeaders.append('Content-Length', body.length.toString());
         requestHeaders.append('Content-Type', 'application/json');
 
-        return await fetch(requestUrl, {
+        return await fetch(url, {
             method: 'POST',
             headers: requestHeaders,
             mode: 'cors',
-            body: requestBody
-        }).then(response => response.json());
+            body: body
+        });
+    }
+
+    /**
+     * Get available dice collections from the database.
+     */
+    static getCollections = async () => {
+        const requestUrl: string = RestEndpoint.rootUrl + 'getCollections';
+
+        return RestEndpoint.get(requestUrl).then(response => response.json());
+    }
+
+    /**
+     * Send a GET request.
+     */
+    static get = async (url: string) => {
+        const requestHeaders: HeadersInit = new Headers();
+        requestHeaders.append('Accept', 'application/json');
+
+        return await fetch(url, {
+            method: 'GET',
+            headers: requestHeaders,
+            mode: 'cors',
+        });
     }
 }

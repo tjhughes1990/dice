@@ -81,8 +81,8 @@ public abstract class AbstractSystemTest {
      */
     protected static List<DiceRollType> createDiceList() throws DiceException {
         final List<DiceRollType> diceRolls = new ArrayList<>();
-        diceRolls.add(new DiceRollType(1, 10, 1));
-        diceRolls.add(new DiceRollType(1, 12, 1));
+        diceRolls.add(new DiceRollType(0L, "Dice 0", 1, 10, 1));
+        diceRolls.add(new DiceRollType(1L, "Dice 1", 1, 12, 1));
 
         return diceRolls;
     }

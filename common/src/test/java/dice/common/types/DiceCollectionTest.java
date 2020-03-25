@@ -25,12 +25,12 @@ public class DiceCollectionTest {
 
     private static final String DICE_LIST_JSON = "[{\"id\":0,\"name\":\"D10\",\"minResult\":1,\"maxResult\":10,\"rollNumber\":1},{\"id\":1,\"name\":\"D12\",\"minResult\":1,\"maxResult\":12,\"rollNumber\":1}]";
 
-    private static final long TEST_ID = 1L;
+    private static final long TEST_ID = 0L;
     private static final String TEST_NAME = "Test name";
     private static final List<DiceRollType> TEST_ROLLS;
     static {
         try {
-            TEST_ROLLS = List.of(new DiceRollType(1, 6, 1));
+            TEST_ROLLS = List.of(new DiceRollType(0L, TEST_NAME, 1, 6, 1));
         } catch (final DiceException e) {
             throw new RuntimeException(e);
         }

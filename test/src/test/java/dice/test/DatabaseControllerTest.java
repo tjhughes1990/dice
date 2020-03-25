@@ -14,9 +14,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import org.apache.http.HttpHeaders;
@@ -37,8 +37,6 @@ public class DatabaseControllerTest extends AbstractSystemTest {
     private static final long UNKNOWN_ID = -1L;
     private static final String INVALID_ID = "invalid";
 
-    private static AtomicLong TEST_COUNTER = new AtomicLong(0L);
-
     /**
      * Tests that dice collection names can be retrieved from the database.
      *
@@ -52,7 +50,7 @@ public class DatabaseControllerTest extends AbstractSystemTest {
         assertNotNull(idNames);
         assertTrue(idNames.size() >= 1);
         final Set<Long> idSet = idNames.parallelStream().map(i -> i.getId()).collect(Collectors.toSet());
-        assertTrue(idSet.containsAll(Set.of(1L, 2L)) && !idSet.contains(0L));
+        assertTrue(idSet.contains(1L));
     }
 
     private Set<IdName> getIdNames() throws Exception {
@@ -74,8 +72,9 @@ public class DatabaseControllerTest extends AbstractSystemTest {
     public void saveTest() throws Exception {
         final int originalEntries = getIdNames().size();
 
+        final IdName idName = generateCollectionId();
         final int statusCode = saveDiceRequest(
-                new DiceRollCollection(null, generateCollectionName(), createDiceList()));
+                new DiceRollCollection(idName.getId(), idName.getName(), createDiceList()));
 
         assertEquals(HttpStatus.SC_OK, statusCode);
         assertEquals(originalEntries + 1, getIdNames().size());
@@ -83,9 +82,31 @@ public class DatabaseControllerTest extends AbstractSystemTest {
 
     /**
      * @return a unique, generated collection name to use for the test.
+     *
+     * @throws Exception
+     *             if the REST call failed.
      */
-    private static synchronized String generateCollectionName() {
-        return "Test collection " + TEST_COUNTER.incrementAndGet();
+    private synchronized IdName generateCollectionId() throws Exception {
+        final Set<IdName> idNames = getIdNames();
+        final Set<Long> ids = idNames.stream().map(i -> i.getId()).collect(Collectors.toSet());
+        final Set<String> names = idNames.stream().map(i -> i.getName()).collect(Collectors.toSet());
+
+        long newId = 1L;
+        while (ids.contains(newId)) {
+            newId++;
+        }
+
+        final StringBuilder sb = new StringBuilder();
+        final Random rand = new Random(0L);
+        do {
+            sb.setLength(0);
+            sb.append("Test_");
+            for (int i = 0; i < 10; i++) {
+                sb.append(Integer.toHexString(rand.nextInt(16)));
+            }
+        } while (names.contains(sb.toString()));
+
+        return new IdName(newId, sb.toString());
     }
 
     /**
@@ -116,8 +137,10 @@ public class DatabaseControllerTest extends AbstractSystemTest {
     @Test
     public void saveNoDiceTest() throws Exception {
         final int originalEntries = getIdNames().size();
+
+        final IdName idName = generateCollectionId();
         final int statusCode = saveDiceRequest(
-                new DiceRollCollection(null, generateCollectionName(), Collections.emptyList()));
+                new DiceRollCollection(idName.getId(), idName.getName(), Collections.emptyList()));
 
         assertEquals(HttpStatus.SC_BAD_REQUEST, statusCode);
         assertEquals(originalEntries, getIdNames().size());
@@ -132,7 +155,9 @@ public class DatabaseControllerTest extends AbstractSystemTest {
     @Test
     public void saveNullDiceTest() throws Exception {
         final int originalEntries = getIdNames().size();
-        final int statusCode = saveDiceRequest(new DiceRollCollection(null, generateCollectionName(), null));
+
+        final IdName idName = generateCollectionId();
+        final int statusCode = saveDiceRequest(new DiceRollCollection(idName.getId(), idName.getName(), null));
 
         assertEquals(HttpStatus.SC_BAD_REQUEST, statusCode);
         assertEquals(originalEntries, getIdNames().size());
@@ -177,13 +202,16 @@ public class DatabaseControllerTest extends AbstractSystemTest {
     @Test
     public void saveNonUniqueNameTest() throws Exception {
         final int originalEntries = getIdNames().size();
-        final String name = generateCollectionName();
-        final int statusCode = saveDiceRequest(new DiceRollCollection(null, name, createDiceList()));
+
+        final IdName idName = generateCollectionId();
+        final int statusCode = saveDiceRequest(
+                new DiceRollCollection(idName.getId(), idName.getName(), createDiceList()));
 
         assertEquals(HttpStatus.SC_OK, statusCode);
         assertEquals(originalEntries + 1, getIdNames().size());
 
-        final int statusCode2 = saveDiceRequest(new DiceRollCollection(null, name, createDiceList()));
+        final int statusCode2 = saveDiceRequest(
+                new DiceRollCollection(idName.getId(), idName.getName(), createDiceList()));
 
         assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, statusCode2);
         assertEquals(originalEntries + 1, getIdNames().size());
@@ -201,17 +229,18 @@ public class DatabaseControllerTest extends AbstractSystemTest {
         final int initialCollectionsCount = getIdNames().size();
 
         // Add a dice collection to the database, ready for deletion.
-        final String toDeleteName = generateCollectionName();
-        saveDiceRequest(new DiceRollCollection(null, toDeleteName, createDiceList()));
+        final IdName toDeleteIdName = generateCollectionId();
+        final long toDeleteId = toDeleteIdName.getId();
+        final String toDeleteName = toDeleteIdName.getName();
+        saveDiceRequest(new DiceRollCollection(toDeleteId, toDeleteName, createDiceList()));
 
-        assertEquals(initialCollectionsCount + 1, getIdNames().size());
-
-        // Get the ID to delete from the DB.
-        final long toDeleteId = getIdNames().stream().filter(d -> d.getName().equals(toDeleteName)).findAny().get()
+        final Set<IdName> addedIdNames = getIdNames();
+        assertEquals(initialCollectionsCount + 1, addedIdNames.size());
+        final long toDeleteDbId = addedIdNames.stream().filter(i -> toDeleteName.equals(i.getName())).findAny().get()
                 .getId();
 
         // Delete the collection by ID from the database.
-        final URI uri = URI.create(ROOT_URL + "delete?id=" + toDeleteId);
+        final URI uri = URI.create(ROOT_URL + "delete?id=" + toDeleteDbId);
         final HttpRequest request = HttpRequest.newBuilder(uri).GET().build();
         final HttpResponse<byte[]> response = httpClient.sendAsync(request, BodyHandlers.ofByteArray()).get(10,
                 TimeUnit.SECONDS);
