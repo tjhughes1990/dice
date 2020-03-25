@@ -22,23 +22,6 @@ public class DiceRollType extends IdName implements IDiceRollType {
     /**
      * Constructor.
      *
-     * @param minResult
-     *            the min dice result.
-     * @param maxResult
-     *            the max dice result.
-     * @param rollNumber
-     *            the number of rolls.
-     *
-     * @throws DiceException
-     *             if the supplied arguments were invalid.
-     */
-    public DiceRollType(final int minResult, final int maxResult, final int rollNumber) throws DiceException {
-        this(null, null, minResult, maxResult, rollNumber);
-    }
-
-    /**
-     * Constructor.
-     *
      * @param id
      *            the dice id.
      * @param name

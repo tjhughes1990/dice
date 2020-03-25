@@ -122,6 +122,6 @@ public class DiceControllerTest extends AbstractSystemTest {
         final String invalidDiceJson = "[{\"minResult\":2,\"maxResult\":1,\"rollNumber\":1}]";
         final HttpResponse<byte[]> response = sendRoll(invalidDiceJson);
 
-        assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, response.statusCode());
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.statusCode());
     }
 }

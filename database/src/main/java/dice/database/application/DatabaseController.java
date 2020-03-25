@@ -39,8 +39,8 @@ public class DatabaseController {
     private static final String DICE_TABLE_NAME = "dice.dice";
     private static final String COLLECTION_ID_COL = "id";
     private static final String COLLECTION_NAME_COL = "name";
-    private static final List<String> DICE_COL_NAMES = List.of("id", "collection_id", "min_result", "max_result",
-            "roll_number");
+    private static final List<String> DICE_COL_NAMES = List.of("id", "collection_id", "name", "min_result",
+            "max_result", "roll_number");
 
     private static final String DELIM = ",";
     private static final Set<String> RESTRICTED_CHARS = Set.of(";", "*", "\\", "#");
@@ -112,13 +112,14 @@ public class DatabaseController {
 
         // Insert individual dice.
         final String diceSql = "INSERT INTO " + DICE_TABLE_NAME + " ("
-                + String.join(DELIM, DICE_COL_NAMES.subList(1, 5)) + ") VALUES (?,?,?,?);";
+                + String.join(DELIM, DICE_COL_NAMES.subList(1, DICE_COL_NAMES.size())) + ") VALUES (?,?,?,?,?);";
         try (final PreparedStatement statement = connection.prepareStatement(diceSql)) {
             for (final DiceRollType diceRoll : diceRollCollection.getDiceRolls()) {
                 statement.setLong(1, id);
-                statement.setInt(2, diceRoll.getMinResult());
-                statement.setInt(3, diceRoll.getMaxResult());
-                statement.setInt(4, diceRoll.getRollNumber());
+                statement.setString(2, diceRoll.getName());
+                statement.setInt(3, diceRoll.getMinResult());
+                statement.setInt(4, diceRoll.getMaxResult());
+                statement.setInt(5, diceRoll.getRollNumber());
                 statement.addBatch();
             }
             statement.executeBatch();
@@ -195,19 +196,23 @@ public class DatabaseController {
      */
     @GetMapping(value = "loadDice", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<DiceRollType> loadDice(@RequestParam(value = COLLECTION_ID_COL, required = true) final long id) {
-        final String sql = "SELECT " + String.join(DELIM, DICE_COL_NAMES.subList(2, 5)) + " FROM " + DICE_TABLE_NAME
-                + " WHERE " + DICE_COL_NAMES.get(1) + " = " + id;
+        final String sql = "SELECT " + String.join(DELIM, DICE_COL_NAMES.subList(2, DICE_COL_NAMES.size())) + " FROM "
+                + DICE_TABLE_NAME + " WHERE " + DICE_COL_NAMES.get(1) + " = " + id;
 
         try (final PreparedStatement statement = connection.prepareStatement(sql)) {
             final ResultSet rs = statement.executeQuery();
             final List<DiceRollType> diceRolls = new ArrayList<>();
+            long i = 0;
             while (rs.next()) {
-                final int minResult = rs.getInt(1);
-                final int maxResult = rs.getInt(2);
-                final int rollNumber = rs.getInt(3);
+                final String name = rs.getString(1);
+                final int minResult = rs.getInt(2);
+                final int maxResult = rs.getInt(3);
+                final int rollNumber = rs.getInt(4);
 
-                final DiceRollType drt = new DiceRollType(minResult, maxResult, rollNumber);
+                final String diceName = name == null ? Long.valueOf(i).toString() : name;
+                final DiceRollType drt = new DiceRollType(i, diceName, minResult, maxResult, rollNumber);
                 diceRolls.add(drt);
+                i++;
             }
 
             return diceRolls;
