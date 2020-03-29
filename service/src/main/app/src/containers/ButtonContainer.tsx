@@ -4,7 +4,7 @@ import { Store } from 'redux';
 import { createRollAction, createLoadAction } from '../actions/ActionType';
 import { default as RestEndpoint } from '../endpoints/RestEndpoint';
 import { default as SelectDiceModal } from './SelectDiceModal';
-import { Dice } from '../Dice';
+import { Dice, DiceCollection } from '../Dice';
 
 import './ButtonContainer.css';
 
@@ -18,13 +18,38 @@ interface ButtonProps {
 interface IState {
     showLoadDiceModal: boolean;
     showDeleteDiceModal: boolean;
+    diceCollectionList: Array<DiceCollection>;
 }
 
 export default class ButtonContainer extends Component<ButtonProps, IState> {
 
     state: IState = {
         showLoadDiceModal: false,
-        showDeleteDiceModal: false
+        showDeleteDiceModal: false,
+        diceCollectionList: []
+    }
+
+    componentDidMount = () => {
+        this.getCollections();
+    }
+
+    getCollections = () => {
+        RestEndpoint.getCollections().then((diceCollectionList: Array<DiceCollection>) => {
+            const stateIds: Array<number> = this.state.diceCollectionList.map(d => (d as DiceCollection).id);
+
+            if (diceCollectionList.length !== stateIds.length) {
+                // If the lengths differ, update list in state.
+                this.setState({ diceCollectionList: diceCollectionList });
+            } else {
+                // If the state does not include all dice collections, update list in state.
+                diceCollectionList.map(d => d.id).forEach((i: number) => {
+                    if (!stateIds.includes(i)) {
+                        this.setState({ diceCollectionList: diceCollectionList });
+                        return;
+                    }
+                });
+            }
+        });
     }
 
     handleRollDice = () => {
@@ -41,8 +66,8 @@ export default class ButtonContainer extends Component<ButtonProps, IState> {
     }
 
     handleDeleteDice = (id: number) => {
-        RestEndpoint.deleteDice(id).then(() => {
-            this.props.store.dispatch(createLoadAction([]));
+        RestEndpoint.deleteDice(id).finally(() => {
+            this.getCollections();
             this.toggleDeleteDiceModal(false);
         });
     }
@@ -80,13 +105,13 @@ export default class ButtonContainer extends Component<ButtonProps, IState> {
                     </div>
                 </div>
 
-                <SelectDiceModal store={this.props.store}
-                    show={this.state.showLoadDiceModal}
+                <SelectDiceModal show={this.state.showLoadDiceModal}
+                    diceCollectionList={this.state.diceCollectionList}
                     title='Load dice'
                     okCallback={(id: number) => this.handleLoadDice(id)}
                     cancelCallback={() => this.toggleLoadDiceModal(false)} />
-                <SelectDiceModal store={this.props.store}
-                    show={this.state.showDeleteDiceModal}
+                <SelectDiceModal show={this.state.showDeleteDiceModal}
+                    diceCollectionList={this.state.diceCollectionList}
                     title='Delete dice'
                     okCallback={(id: number) => this.handleDeleteDice(id)}
                     cancelCallback={() => this.toggleDeleteDiceModal(false)} />
