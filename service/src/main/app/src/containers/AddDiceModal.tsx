@@ -30,9 +30,9 @@ const diceTypes: OptionTypeBase[] = [
 
 export default class AddDiceModal extends Component<AddDiceModalProps, IState> {
 
-    state = {
+    state: IState = {
         type: diceTypes[2],
-        count: 1,
+        count: 1
     }
 
     handleTypeSelect = (e: OptionTypeBase) => {
@@ -56,11 +56,11 @@ export default class AddDiceModal extends Component<AddDiceModalProps, IState> {
         const id:number = this.props.store.getState().diceList.length;
 
          store.dispatch(createAddAction({
-            'id': id,
-            'name': value.name,
-            'minResult': value.minResult,
-            'maxResult': value.maxResult,
-            'rollNumber': this.state.count
+            id: id,
+            name: value.name,
+            minResult: value.minResult,
+            maxResult: value.maxResult,
+            rollNumber: this.state.count
          }));
 
         // Hide the modal.

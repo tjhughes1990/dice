@@ -20,7 +20,7 @@ export default class App extends React.Component<{}, IState> {
 
     readonly store = createStore(RootReducer);
 
-    readonly state = {
+    readonly state: IState = {
         selectedDiceRow: undefined,
         showAddDiceModal: false
     }
@@ -69,7 +69,7 @@ export default class App extends React.Component<{}, IState> {
                         <ButtonContainer store={this.store}
                             handleAddDice={this.showAddDiceModal}
                             handleRemoveDice={this.handleRemoveDice}
-                            selectedDiceRowInd={this.state.selectedDiceRow} />
+                            selectedDiceRow={this.state.selectedDiceRow} />
                         <DiceListContainer
                             selectedDiceRow={this.state.selectedDiceRow}
                             setSelectedDiceRow={this.setSelectedDiceRow} />

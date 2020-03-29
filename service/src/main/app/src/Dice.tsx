@@ -6,3 +6,8 @@ export type Dice = {
     rollNumber: number;
     sumResult?: number;
 }
+
+export type DiceCollection = {
+    id: number;
+    name: string;
+}
