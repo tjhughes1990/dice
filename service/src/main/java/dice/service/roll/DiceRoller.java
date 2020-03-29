@@ -12,6 +12,8 @@ public class DiceRoller {
 
     private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("win");
 
+    private static long RANDOM_DEVICE_PTR;
+
     /**
      * Constructor.
      *
@@ -29,7 +31,12 @@ public class DiceRoller {
         // }
 
         System.load(libPath.toString());
+
+        // Get a pointer to a random_device instance from the C++ layer.
+        RANDOM_DEVICE_PTR = getRandomDeviceInstance();
     }
+
+    private static synchronized native long getRandomDeviceInstance();
 
     /**
      * Perform rolls on the aggregated dice.
@@ -51,8 +58,11 @@ public class DiceRoller {
             diceRollTypeArr[i] = diceRollTypes.get(i);
         }
 
-        performRolls(diceRollTypeArr, size);
+        performRolls(RANDOM_DEVICE_PTR, diceRollTypeArr, size);
     }
 
-    private synchronized native void performRolls(final IDiceRollType[] diceRollTypes, final int numberOfDice);
+    private synchronized native void performRolls(final long randomDevicePtr, final IDiceRollType[] diceRollTypes,
+            final int numberOfDice);
+
+    // private static synchronized native void cleanUp();
 }

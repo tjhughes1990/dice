@@ -17,9 +17,9 @@ public:
      * @brief Constructor.
      *
      * @param a_env_p the JNI environment.
-     * @param a_seed the seed to use.
+     * @param a_randDev the random device to use.
      */
-    DiceRollerImpl(JNIEnv* a_env_p, const unsigned int a_seed);
+    DiceRollerImpl(JNIEnv* a_env_p, std::random_device *a_randDev);
 
     /**
      * @brief Destructor.
@@ -41,7 +41,7 @@ private:
     jmethodID m_rollNumMethod_p;
     jmethodID m_setResultMethod_p;
 
-    const unsigned int m_seed;
+    std::random_device *m_randDev;
 };
 
 #endif

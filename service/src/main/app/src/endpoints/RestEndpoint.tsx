@@ -4,7 +4,7 @@ import { Dice, DiceCollection } from '../Dice';
 
 export default class RestEndpoint extends Component {
 
-    static readonly rootUrl: string = 'http://localhost:8080/';
+    static readonly rootUrl: string = window.location.origin + '/';
 
     /**
      * Roll dice REST request.

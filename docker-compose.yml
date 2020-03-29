@@ -24,17 +24,19 @@ services:
             - "8081"
         restart: on-failure
 
-    pgadmin:
-        env_file:
-            - database/src/main/resources/pgadmin.env
-        image: dpage/pgadmin4
-        links:
-            - postgres
-        ports:
-            - target: 80
-              published: 5432
-              protocol: tcp
-              mode: host
+# Uncomment to enable PGAdmin.
+#
+#    pgadmin:
+#        env_file:
+#            - database/src/main/resources/pgadmin.env
+#        image: dpage/pgadmin4
+#        links:
+#            - postgres
+#        ports:
+#            - target: 80
+#              published: 5432
+#              protocol: tcp
+#              mode: host
 
     postgres:
         env_file:

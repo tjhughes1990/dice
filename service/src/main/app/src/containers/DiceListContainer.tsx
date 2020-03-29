@@ -51,7 +51,7 @@ class DiceListContainer extends Component<DiceListProps, {}> {
                 onClick={this.handleDiceRowClick}>
                 <div className='col-3'>{d.name}</div>
                 <div className='col-3'>{d.rollNumber}</div>
-                <div className='col-3 resultCol'>{d.sumResult ? d.sumResult : undefined}</div>
+                <div className='col-3 resultCol'>{d.sumResult !== undefined ? d.sumResult : undefined}</div>
             </div>);
 
             if (d.sumResult !== undefined) {
