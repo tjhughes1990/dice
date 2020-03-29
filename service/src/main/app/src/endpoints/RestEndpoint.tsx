@@ -1,6 +1,6 @@
 import { Component } from 'react';
 
-import { Dice } from '../Dice';
+import { Dice, DiceCollection } from '../Dice';
 
 export default class RestEndpoint extends Component {
 
@@ -42,11 +42,33 @@ export default class RestEndpoint extends Component {
         return RestEndpoint.get(requestUrl).then(response => response.json());
     }
 
+    /**
+     * Save a dice collection to the database.
+     *
+     * @param request the {@link DiceCollection} to save to the database.
+     */
+    static saveDice = async (request: DiceCollection) => {
+        const requestUrl: string = RestEndpoint.rootUrl + 'save';
+        const requestBody: string = JSON.stringify(request);
+
+        return RestEndpoint.post(requestUrl, requestBody).then(response => response.json());
+    }
+
+    /**
+     * Load a dice collection from the database.
+     *
+     * @param id the ID of the collection to load from the database.
+     */
     static loadDice = async (id: number) => {
         const requestUrl: string = RestEndpoint.rootUrl + 'load?id=' + id;
         return RestEndpoint.get(requestUrl).then(response => response.json());
     }
 
+    /**
+     * Delete a dice collection from the database.
+     *
+     * @param id the ID of the collection to delete from the database.
+     */
     static deleteDice = async (id: number) => {
         const requestUrl: string = RestEndpoint.rootUrl + 'delete?id=' + id;
         return RestEndpoint.get(requestUrl).then(response => response.json());

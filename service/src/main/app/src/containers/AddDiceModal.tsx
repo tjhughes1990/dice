@@ -40,7 +40,7 @@ export default class AddDiceModal extends Component<AddDiceModalProps, IState> {
     }
 
     handleCountChange = (e: ChangeEvent<HTMLInputElement>) => {
-        let countValue: string = e.currentTarget.value;
+        const countValue: string = e.currentTarget.value;
 
         if(this.validateCount(countValue)) {
             this.setState({'count': parseInt(countValue)});
