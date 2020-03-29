@@ -9,11 +9,19 @@ extern "C" {
 #endif
 /*
  * Class:     dice_service_roll_DiceRoller
+ * Method:    getRandomDeviceInstance
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_dice_service_roll_DiceRoller_getRandomDeviceInstance
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     dice_service_roll_DiceRoller
  * Method:    performRolls
- * Signature: ([Ldice/service/types/IDiceRollType;I)V
+ * Signature: (J[Ldice/common/types/IDiceRollType;I)V
  */
 JNIEXPORT void JNICALL Java_dice_service_roll_DiceRoller_performRolls
-  (JNIEnv *, jobject, jobjectArray, jint);
+  (JNIEnv *, jobject, jlong, jobjectArray, jint);
 
 #ifdef __cplusplus
 }

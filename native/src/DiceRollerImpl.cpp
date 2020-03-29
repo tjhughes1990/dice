@@ -3,14 +3,14 @@
  */
 #include "DiceRollerImpl.hpp"
 
-DiceRollerImpl::DiceRollerImpl(JNIEnv* a_env_p, const unsigned int a_seed)
+DiceRollerImpl::DiceRollerImpl(JNIEnv* a_env_p, std::random_device *a_randDev)
     : m_env_p(a_env_p)
     , m_rollerClass_p(m_env_p->FindClass("dice/common/types/IDiceRollType"))
     , m_minMethod_p(m_env_p->GetMethodID(m_rollerClass_p, "getMinResult", "()I"))
     , m_maxMethod_p(m_env_p->GetMethodID(m_rollerClass_p, "getMaxResult", "()I"))
     , m_rollNumMethod_p(m_env_p->GetMethodID(m_rollerClass_p, "getRollNumber", "()I"))
     , m_setResultMethod_p(m_env_p->GetMethodID(m_rollerClass_p, "setSumResult", "(I)V"))
-    , m_seed(a_seed) {
+    , m_randDev(a_randDev) {
 }
 
 DiceRollerImpl::~DiceRollerImpl() { }
@@ -21,7 +21,8 @@ DiceRollerImpl::rollDice(jobject a_diceRoll_p) const {
     const jint max(m_env_p->CallIntMethod(a_diceRoll_p, m_maxMethod_p));
     const jint n(m_env_p->CallIntMethod(a_diceRoll_p, m_rollNumMethod_p));
 
-    std::mt19937_64 rngEng(m_seed);
+    const unsigned int seed = m_randDev->operator()();
+    std::mt19937_64 rngEng(seed);
     std::uniform_int_distribution<int> rng(min, max);
 
     int sum = 0;
