@@ -39,7 +39,16 @@ export default class RestEndpoint extends Component {
      */
     static getCollections = async () => {
         const requestUrl: string = RestEndpoint.rootUrl + 'getCollections';
+        return RestEndpoint.get(requestUrl).then(response => response.json());
+    }
 
+    static loadDice = async (id: number) => {
+        const requestUrl: string = RestEndpoint.rootUrl + 'load?id=' + id;
+        return RestEndpoint.get(requestUrl).then(response => response.json());
+    }
+
+    static deleteDice = async (id: number) => {
+        const requestUrl: string = RestEndpoint.rootUrl + 'delete?id=' + id;
         return RestEndpoint.get(requestUrl).then(response => response.json());
     }
 
