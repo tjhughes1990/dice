@@ -64,5 +64,12 @@ public class DiceRoller {
     private synchronized native void performRolls(final long randomDevicePtr, final IDiceRollType[] diceRollTypes,
             final int numberOfDice);
 
-    // private static synchronized native void cleanUp();
+    /**
+     * Clean up C++ memory space.
+     */
+    public static void cleanUp() {
+        cleanUp(RANDOM_DEVICE_PTR);
+    }
+
+    private static synchronized native void cleanUp(final long randomDevicePtr);
 }

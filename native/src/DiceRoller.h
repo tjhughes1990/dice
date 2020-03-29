@@ -23,6 +23,14 @@ JNIEXPORT jlong JNICALL Java_dice_service_roll_DiceRoller_getRandomDeviceInstanc
 JNIEXPORT void JNICALL Java_dice_service_roll_DiceRoller_performRolls
   (JNIEnv *, jobject, jlong, jobjectArray, jint);
 
+/*
+ * Class:     dice_service_roll_DiceRoller
+ * Method:    cleanUp
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_dice_service_roll_DiceRoller_cleanUp
+  (JNIEnv *, jclass, jlong);
+
 #ifdef __cplusplus
 }
 #endif

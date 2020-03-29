@@ -9,7 +9,7 @@
 #include <random>
 
 JNIEXPORT jlong JNICALL
-Java_dice_service_roll_DiceRoller_getRandomDeviceInstance(UNUSED JNIEnv *a_env, UNUSED jclass a_class) {
+Java_dice_service_roll_DiceRoller_getRandomDeviceInstance(UNUSED JNIEnv *a_env, UNUSED jclass a_clazz) {
     std::random_device *rd = new std::random_device();
     return reinterpret_cast<jlong>(rd);
 }
@@ -25,4 +25,10 @@ Java_dice_service_roll_DiceRoller_performRolls(JNIEnv *a_env, UNUSED jobject a_t
         jobject diceRoll(a_env->GetObjectArrayElement(a_diceRolls, i));
         diceRoller.rollDice(diceRoll);
     }
+}
+
+JNIEXPORT void JNICALL
+Java_dice_service_roll_DiceRoller_cleanUp(UNUSED JNIEnv *a_env, UNUSED jclass a_clazz, jlong a_randomDev) {
+    std::random_device *rd = reinterpret_cast<std::random_device*>(a_randomDev);
+    delete rd;
 }
