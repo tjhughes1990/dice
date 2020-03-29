@@ -3,6 +3,7 @@ import { Store } from 'redux';
 
 import { createRollAction, createLoadAction } from '../actions/ActionType';
 import { default as RestEndpoint } from '../endpoints/RestEndpoint';
+import { default as SaveDiceModal } from './SaveDiceModal';
 import { default as SelectDiceModal } from './SelectDiceModal';
 import { Dice, DiceCollection } from '../Dice';
 
@@ -16,6 +17,7 @@ interface ButtonProps {
 }
 
 interface IState {
+    showSaveDiceModal: boolean;
     showLoadDiceModal: boolean;
     showDeleteDiceModal: boolean;
     diceCollectionList: Array<DiceCollection>;
@@ -24,6 +26,7 @@ interface IState {
 export default class ButtonContainer extends Component<ButtonProps, IState> {
 
     state: IState = {
+        showSaveDiceModal: false,
         showLoadDiceModal: false,
         showDeleteDiceModal: false,
         diceCollectionList: []
@@ -58,6 +61,13 @@ export default class ButtonContainer extends Component<ButtonProps, IState> {
         });
     }
 
+    handleSaveDice = (diceCollection: DiceCollection) => {
+        RestEndpoint.saveDice(diceCollection).finally(() => {
+               this.getCollections();
+               this.toggleSaveDiceModal(false);
+        });
+    }
+
     handleLoadDice = (id: number) => {
         RestEndpoint.loadDice(id).then((diceList: Array<Dice>) => {
             this.props.store.dispatch(createLoadAction(diceList));
@@ -70,6 +80,10 @@ export default class ButtonContainer extends Component<ButtonProps, IState> {
             this.getCollections();
             this.toggleDeleteDiceModal(false);
         });
+    }
+
+    toggleSaveDiceModal = (showState: boolean) => {
+        this.setState({ showSaveDiceModal: showState });
     }
 
     toggleLoadDiceModal = (showState: boolean) => {
@@ -105,6 +119,10 @@ export default class ButtonContainer extends Component<ButtonProps, IState> {
                     </div>
                 </div>
 
+                <SaveDiceModal show={this.state.showSaveDiceModal}
+                    diceList={this.props.store.getState().diceList}
+                    okCallback={this.handleSaveDice}
+                    cancelCallback={() => this.toggleSaveDiceModal(false)} />
                 <SelectDiceModal show={this.state.showLoadDiceModal}
                     diceCollectionList={this.state.diceCollectionList}
                     title='Load dice'
@@ -119,7 +137,7 @@ export default class ButtonContainer extends Component<ButtonProps, IState> {
                     <div className='row'>
                         <button type='button'
                             className='btn btn-primary'
-                            onClick={undefined}
+                            onClick={() => this.toggleSaveDiceModal(true)}
                             disabled={diceCount <= 0}>Save dice</button>
                     </div>
                     <div className='row'>
