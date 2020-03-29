@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 
 import { createAddAction } from '../actions/ActionType';
 
-import './AddDiceModal.css';
+import './DiceModal.css';
 
 interface AddDiceModalProps {
     store: Store;

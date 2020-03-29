@@ -1,41 +1,27 @@
 import React, { Component } from 'react';
 import Select, { OptionTypeBase, ValueType } from 'react-select';
-import { Store } from 'redux';
 import Modal from 'react-bootstrap/Modal';
 
-import { default as RestEndpoint } from '../endpoints/RestEndpoint';
 import { DiceCollection } from '../Dice';
 
+import './DiceModal.css';
+
 interface ISelectDiceModalProps {
-    store: Store;
     show: boolean;
+    diceCollectionList: Array<DiceCollection>;
     title: string;
     okCallback: any;
     cancelCallback: any;
 }
 
 interface IState {
-    diceCollectionList: Array<DiceCollection>;
     selected: DiceCollection | undefined;
 }
 
 export default class SelectDiceModal extends Component<ISelectDiceModalProps, IState> {
 
     state: IState = {
-        diceCollectionList: [],
         selected: undefined
-    }
-
-    getCollections = () => {
-        RestEndpoint.getCollections().then((diceCollectionList: Array<DiceCollection>) => {
-            const stateIds: Array<number> = this.state.diceCollectionList.map(d => (d as DiceCollection).id);
-            diceCollectionList.map(d => d.id).forEach((i: number) => {
-                if (!stateIds.includes(i)) {
-                    this.setState({ diceCollectionList: diceCollectionList });
-                    return;
-                }
-            });
-        });
     }
 
     handleSelect = (selected: ValueType<OptionTypeBase> | undefined) => {
@@ -60,23 +46,18 @@ export default class SelectDiceModal extends Component<ISelectDiceModalProps, IS
     }
 
     render = () => {
-        let showModal: boolean = this.props.show;
-        if (showModal) {
-            this.getCollections();
-        }
-
         // Create dropdown options.
-        const diceCollectionList = this.state.diceCollectionList;
+        const diceCollectionList = this.props.diceCollectionList;
         let options: OptionTypeBase[] = [];
         diceCollectionList.forEach((d: DiceCollection) => {
             options.push({
                 value: d,
                 label: d.name
             });
-        })
+        });
 
         // Get the displayed item.
-        let displayObj: OptionTypeBase = { value: undefined, label: 'Select. . .'  };
+        let displayObj: OptionTypeBase = { value: undefined, label: 'Select. . .' };
         const selected: DiceCollection | undefined = this.state.selected;
         if (selected !== undefined) {
             diceCollectionList.some((d: DiceCollection) => {
@@ -90,7 +71,7 @@ export default class SelectDiceModal extends Component<ISelectDiceModalProps, IS
         }
 
         return (
-            <Modal show={showModal}>
+            <Modal show={this.props.show}>
                 <Modal.Header>
                     <Modal.Title>{this.props.title}</Modal.Title>
                 </Modal.Header>
@@ -98,9 +79,10 @@ export default class SelectDiceModal extends Component<ISelectDiceModalProps, IS
                 <Modal.Body>
                     <form>
                         <div>
-                            <label>Dice Type:</label>
+                            <label>Dice Collection:</label>
                             <Select className='diceModalSelect'
                                 value={displayObj}
+                                isDisabled={this.props.diceCollectionList.length === 0}
                                 onChange={this.handleSelect}
                                 options={options} />
                         </div>
