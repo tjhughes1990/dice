@@ -17,6 +17,7 @@ interface ButtonProps {
 }
 
 interface IState {
+    isDatabaseAvailable: boolean | undefined;
     showSaveDiceModal: boolean;
     showLoadDiceModal: boolean;
     showDeleteDiceModal: boolean;
@@ -26,18 +27,32 @@ interface IState {
 export default class ButtonContainer extends Component<ButtonProps, IState> {
 
     state: IState = {
+        isDatabaseAvailable: undefined,
         showSaveDiceModal: false,
         showLoadDiceModal: false,
         showDeleteDiceModal: false,
         diceCollectionList: []
     }
 
-    componentDidMount = () => {
+    constructor(props: ButtonProps) {
+        super(props)
         this.getCollections();
     }
 
     getCollections = () => {
-        RestEndpoint.getCollections().then((diceCollectionList: Array<DiceCollection>) => {
+        RestEndpoint.getCollections().then((json) => {
+            const isDatabaseAvailable: boolean = json !== undefined && json.status === undefined;
+            
+            // Set the state of the database available flag once, in the constructor.
+            if(this.state.isDatabaseAvailable === undefined) {
+                this.setState({ 'isDatabaseAvailable': isDatabaseAvailable });
+            }
+
+            if (!isDatabaseAvailable) {
+                return;
+            }
+
+            const diceCollectionList: Array<DiceCollection> = json as Array<DiceCollection>;
             const stateIds: Array<number> = this.state.diceCollectionList.map(d => (d as DiceCollection).id);
 
             if (diceCollectionList.length !== stateIds.length) {
@@ -63,8 +78,8 @@ export default class ButtonContainer extends Component<ButtonProps, IState> {
 
     handleSaveDice = (diceCollection: DiceCollection) => {
         RestEndpoint.saveDice(diceCollection).finally(() => {
-               this.getCollections();
-               this.toggleSaveDiceModal(false);
+            this.getCollections();
+            this.toggleSaveDiceModal(false);
         });
     }
 
@@ -94,8 +109,51 @@ export default class ButtonContainer extends Component<ButtonProps, IState> {
         this.setState({ showDeleteDiceModal: showState });
     }
 
+    renderDatabaseButtons = (isDiceCountNonZero: boolean) => {
+        if (this.state.isDatabaseAvailable) {
+            return (
+                <div>
+                    <SaveDiceModal show={this.state.showSaveDiceModal}
+                        diceList={this.props.store.getState().diceList}
+                        okCallback={this.handleSaveDice}
+                        cancelCallback={() => this.toggleSaveDiceModal(false)} />
+                    <SelectDiceModal show={this.state.showLoadDiceModal}
+                        diceCollectionList={this.state.diceCollectionList}
+                        title='Load dice'
+                        okCallback={(id: number) => this.handleLoadDice(id)}
+                        cancelCallback={() => this.toggleLoadDiceModal(false)} />
+                    <SelectDiceModal show={this.state.showDeleteDiceModal}
+                        diceCollectionList={this.state.diceCollectionList}
+                        title='Delete dice'
+                        okCallback={(id: number) => this.handleDeleteDice(id)}
+                        cancelCallback={() => this.toggleDeleteDiceModal(false)} />
+                    <div className='buttonContainer'>
+                        <div className='row'>
+                            <button type='button'
+                                className='btn btn-primary'
+                                onClick={() => this.toggleSaveDiceModal(true)}
+                                disabled={isDiceCountNonZero}>Save dice</button>
+                        </div>
+                        <div className='row'>
+                            <button type='button'
+                                className='btn btn-primary'
+                                onClick={() => this.toggleLoadDiceModal(true)}>Load dice</button>
+                        </div>
+                        <div className='row'>
+                            <button type='button'
+                                className='btn btn-primary'
+                                onClick={() => this.toggleDeleteDiceModal(true)}>Delete dice</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        } else {
+            return undefined;
+        }
+    }
+
     render = () => {
-        const diceCount: number = this.props.store.getState().diceList.length;
+        const isDiceCountNonZero: boolean = this.props.store.getState().diceList.length <= 0;
 
         return (
             <div>
@@ -115,42 +173,11 @@ export default class ButtonContainer extends Component<ButtonProps, IState> {
                         <button type='button'
                             className='btn btn-primary'
                             onClick={this.handleRollDice}
-                            disabled={diceCount <= 0}>Roll</button>
+                            disabled={isDiceCountNonZero}>Roll</button>
                     </div>
                 </div>
 
-                <SaveDiceModal show={this.state.showSaveDiceModal}
-                    diceList={this.props.store.getState().diceList}
-                    okCallback={this.handleSaveDice}
-                    cancelCallback={() => this.toggleSaveDiceModal(false)} />
-                <SelectDiceModal show={this.state.showLoadDiceModal}
-                    diceCollectionList={this.state.diceCollectionList}
-                    title='Load dice'
-                    okCallback={(id: number) => this.handleLoadDice(id)}
-                    cancelCallback={() => this.toggleLoadDiceModal(false)} />
-                <SelectDiceModal show={this.state.showDeleteDiceModal}
-                    diceCollectionList={this.state.diceCollectionList}
-                    title='Delete dice'
-                    okCallback={(id: number) => this.handleDeleteDice(id)}
-                    cancelCallback={() => this.toggleDeleteDiceModal(false)} />
-                <div className='buttonContainer'>
-                    <div className='row'>
-                        <button type='button'
-                            className='btn btn-primary'
-                            onClick={() => this.toggleSaveDiceModal(true)}
-                            disabled={diceCount <= 0}>Save dice</button>
-                    </div>
-                    <div className='row'>
-                        <button type='button'
-                            className='btn btn-primary'
-                            onClick={() => this.toggleLoadDiceModal(true)}>Load dice</button>
-                    </div>
-                    <div className='row'>
-                        <button type='button'
-                            className='btn btn-primary'
-                            onClick={() => this.toggleDeleteDiceModal(true)}>Delete dice</button>
-                    </div>
-                </div>
+                {this.renderDatabaseButtons(isDiceCountNonZero)};
             </div>
         );
     }
