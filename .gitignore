@@ -3,5 +3,8 @@
 *.class
 **/target/
 
-# Misc.
+# Eclipse.
 .workspace
+**/.classpath
+**/.project
+**/.settings
