@@ -3,13 +3,5 @@
 *.class
 **/target/
 
-# Cpp
-native/build
-*.dll
-*.so
-
-# Security.
-database/src/main/resources/*.env
-
 # Misc.
-.metadata
+.workspace
