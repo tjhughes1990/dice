@@ -12,6 +12,7 @@
 
     <modules>
         <module>./pom-parent.xml</module>
-       <module>core</module>
+        <module>core</module>
+        <module>ui</module>
     </modules>
 </project>

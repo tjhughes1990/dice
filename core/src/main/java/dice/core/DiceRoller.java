@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import dice.core.types.DiceCollection;
+import dice.core.types.DiceRolls;
 
 /**
  * Dice roller.
@@ -35,20 +36,17 @@ public class DiceRoller {
         this(Instant.now().getEpochSecond(), diceCollections);
     }
 
-    /**
-     * @return a list of rolled values.
-     */
-    public List<Integer> performRoll() {
-        final List<Integer> values = new ArrayList<>();
+    public void performRoll() {
         for (final DiceCollection diceCollection : diceCollections) {
-            final int count = diceCollection.count();
-            final int sides = diceCollection.dice().sides();
+            final int count = diceCollection.getCount();
+            final int sides = diceCollection.getDice().sides();
 
+            final List<Integer> values = new ArrayList<>(count);
             for (int i = 0; i < count; i++) {
                 values.add(rand.nextInt(sides) + 1);
             }
-        }
 
-        return values;
+            diceCollection.setRolls(DiceRolls.fromValues(values));
+        }
     }
 }

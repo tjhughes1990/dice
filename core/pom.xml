@@ -13,4 +13,12 @@
         <version>1.0.0</version>
         <relativePath>../pom-parent.xml</relativePath>
     </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>
