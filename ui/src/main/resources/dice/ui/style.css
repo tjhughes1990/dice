@@ -1,0 +1,87 @@
+.root {
+  -fx-primary: rgb(192, 0, 0);
+  -fx-primary-a05: rgba(192, 0, 0, 0.05);
+  -fx-primarydark: rgba(96, 0, 0, 1.0);
+  -fx-primarydark-a50: rgba(96, 0, 0, 0.5);
+
+  -fx-focus-color: -fx-primary;
+  -fx-faint-focus-color: transparent;
+  -fx-accent: -fx-primary-a05;
+}
+
+.title {
+  -fx-text-fill: -fx-primarydark;
+
+  -fx-font-size: 20pt;
+  -fx-font-weight: bold;
+}
+
+.label {
+  -fx-font-size: 16pt;
+}
+
+.button {
+  -fx-background-color: linear-gradient(to bottom, -fx-primary, -fx-primarydark);
+  -fx-background-radius: 10pt;
+  -fx-border-radius: 0pt;
+
+  -fx-font-size: 16pt;
+  -fx-font-weight: bold;
+  -fx-text-fill: white;
+}
+
+.button:hover {
+  -fx-effect: dropshadow(gaussian, -fx-primarydark-a50, 10, 0.5, 3.0, 3.0);
+
+  -fx-scale-x: 1.05;
+  -fx-scale-y: 1.05;
+  -fx-scale-z: 1.05;
+}
+
+.button:pressed {
+  -fx-background-color: linear-gradient(to top, -fx-primary, -fx-primarydark);
+  -fx-effect: dropshadow(gaussian, -fx-primarydark-a50, 5, 0.5, -0.5, 0.5);
+}
+
+.combo-box {
+  -fx-focus-color: -fx-primary;
+
+  -fx-font-size: 16pt;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:hover {
+  -fx-text-fill: -fx-text-base-color;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
+  -fx-text-fill: white;
+}
+
+.list-view {
+  -fx-font-size: 16pt;
+}
+
+.list-view .list-cell:filled:selected,
+.list-view .list-cell:filled:selected:focused {
+  -fx-background-color: -fx-primary;
+  -fx-text-fill: white;
+}
+
+.text-field {
+  -fx-focus-color: -fx-primary;
+  -fx-font-size: 16pt;
+}
+
+.titled-pane {
+  -fx-text-fill: white;
+}
+
+.titled-pane > .title {
+  -fx-background-color: -fx-primary;
+  -fx-font-size: 12pt;
+}
+
+.titled-pane > .title > .arrow-button > .arrow {
+  -fx-background-color: white;
+}
