@@ -8,3 +8,9 @@
 **/.classpath
 **/.project
 **/.settings
+
+# Installer
+installer/Dice/
+installer/jre/
+installer/libs/
+*.zip

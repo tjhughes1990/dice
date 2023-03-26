@@ -1,11 +1,11 @@
 # Dice Roller
 
-This small Java program was designed as a player aid to simulate dice rolls for tabletop RPGs.
+A small Java program to simulate dice rolls.
 
 ## Features
 
 * Dice types available:
-  * Coin
+  * D2
   * D4
   * D6
   * D8
@@ -14,6 +14,14 @@ This small Java program was designed as a player aid to simulate dice rolls for 
   * D20
   * D100
 
-* Any number of dice up to a maximum of 20 (for each individual dice type) can be rolled at once.
+## Building from source
 
-* The sum of the dice rolls is automatically calculated, and displayed to the user.
+The source code can be built using [maven](https://maven.apache.org/index.html). Java v20 and JavaFX v20 will also need to be installed. The build can be performed by running the following command:
+
+``` bash
+mvn clean install -D"javafx.jmods.path=[Path to JavaFX jmods directory]"
+```
+
+## Licence Stuff
+
+Icons derived with changes from Font Awesome ([licence](https://fontawesome.com/license/free)).
