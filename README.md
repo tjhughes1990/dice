@@ -1,5 +1,7 @@
 # Dice Roller
 
+[![Maven CI build](https://github.com/tjh90/dice/actions/workflows/maven.yml/badge.svg?branch=main)](https://github.com/tjh90/dice/actions/workflows/maven.yml)
+
 A small Java program to simulate dice rolls.
 
 ## Features
