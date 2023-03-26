@@ -1,0 +1,170 @@
+<project
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>installer</artifactId>
+    <name>Dice Installer</name>
+    <packaging>pom</packaging>
+
+    <parent>
+        <groupId>dice</groupId>
+        <artifactId>parent</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../pom-parent.xml</relativePath>
+    </parent>
+
+    <properties>
+        <libs.dir>${project.basedir}/libs</libs.dir>
+        <jre.dir>${project.basedir}/jre</jre.dir>
+        <jpackage.dir>${project.basedir}/Dice</jpackage.dir>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>dice</groupId>
+            <artifactId>ui</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>dice-${project.version}</finalName>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${libs.dir}</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack-dependencies</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                           <artifactItems>
+                               <artifactItem>
+                                   <groupId>dice</groupId>
+                                   <artifactId>ui</artifactId>
+                                   <version>${project.version}</version>
+                                   <type>jar</type>
+                                   <includes>**/*.ico</includes>
+                               </artifactItem>
+                           </artifactItems>
+                           <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>run-jlink</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <exec executable="jlink">
+                                    <arg value="-p" />
+                                    <arg value="${javafx.jmods.path}" />
+                                    <arg value="--add-modules" />
+                                    <arg value="javafx.controls,javafx.fxml" />
+                                    <arg value="--compress" />
+                                    <arg value="2" />
+                                    <arg value="--no-header-files" />
+                                    <arg value="--no-man-pages" />
+                                    <arg value="--output" />
+                                    <arg value="${jre.dir}" />
+                                    <arg value="--strip-debug" />
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>run-jpackage</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <exec executable="jpackage">
+                                    <arg value="--input" />
+                                    <arg value="${libs.dir}" />
+                                    <arg value="--name" />
+                                    <arg value="Dice" />
+                                    <arg value="--main-jar" />
+                                    <arg value="ui-${project.version}.jar" />
+                                    <arg value="--main-class" />
+                                    <arg value="dice.ui.DiceApp" />
+                                    <arg value="--type" />
+                                    <arg value="app-image" />
+                                    <arg value="--runtime-image" />
+                                    <arg value="${jre.dir}" />
+                                    <arg value="--icon" />
+                                    <arg value="${project.build.directory}/dice/ui/icons/dice-icon.ico" />
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>zip-exe</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <zip destfile="Dice-${project.version}.zip" basedir="${jpackage.dir}" />
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${libs.dir}</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>${jre.dir}</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>${jpackage.dir}</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>${project.basedir}</directory>
+                            <includes>
+                                <include>*.zip</include>
+                            </includes>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

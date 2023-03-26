@@ -14,5 +14,6 @@
         <module>./pom-parent.xml</module>
         <module>core</module>
         <module>ui</module>
+        <module>installer</module>
     </modules>
 </project>
