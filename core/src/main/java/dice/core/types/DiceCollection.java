@@ -1,15 +1,19 @@
 package dice.core.types;
 
+import java.io.Serializable;
+
 /**
  * Dice collection.
  */
-public class DiceCollection {
+public class DiceCollection implements Serializable {
+
+    private static final long serialVersionUID = 5654195725189925247L;
 
     private String name;
     private Dice dice;
     private int count;
 
-    private DiceRolls rolls = DiceRolls.EMPTY;
+    private transient DiceRolls rolls = DiceRolls.EMPTY;
 
     public DiceCollection(final String name) {
         this(name, Dice.D6, 1);

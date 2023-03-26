@@ -7,25 +7,19 @@
   -fx-focus-color: -fx-primary;
   -fx-faint-focus-color: transparent;
   -fx-accent: -fx-primary-a50;
-}
 
-.title {
-  -fx-text-fill: -fx-primarydark;
-
-  -fx-font-size: 20pt;
-  -fx-font-weight: bold;
-}
-
-.label {
   -fx-font-size: 16pt;
 }
+
+/******************************************************************************/
+/* Controls                                                                   */
+/******************************************************************************/
 
 .button {
   -fx-background-color: linear-gradient(to bottom, -fx-primary, -fx-primarydark);
   -fx-background-radius: 10pt;
   -fx-border-radius: 0pt;
 
-  -fx-font-size: 16pt;
   -fx-font-weight: bold;
   -fx-text-fill: white;
 }
@@ -45,8 +39,6 @@
 
 .combo-box {
   -fx-focus-color: -fx-primary;
-
-  -fx-font-size: 16pt;
 }
 
 .combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:hover {
@@ -56,21 +48,6 @@
 .combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
 .combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
   -fx-text-fill: white;
-}
-
-.list-view {
-  -fx-font-size: 16pt;
-}
-
-.list-view .list-cell:filled:selected,
-.list-view .list-cell:filled:selected:focused {
-  -fx-background-color: -fx-primary;
-  -fx-text-fill: white;
-}
-
-.text-field {
-  -fx-focus-color: -fx-primary;
-  -fx-font-size: 16pt;
 }
 
 .titled-pane {
@@ -84,4 +61,30 @@
 
 .titled-pane > .title > .arrow-button > .arrow {
   -fx-background-color: white;
+}
+
+.table-view .column-header,
+.table-view .filler,
+.table-view > .column-header-background > .show-hide-columns-button,
+.table-view:constrained-resize .filler {
+    -fx-background-color: -fx-primary;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+}
+
+/******************************************************************************/
+/* Classes                                                                    */
+/******************************************************************************/
+
+.small-button {
+  -fx-background-radius: 5pt;
+}
+
+.title {
+  -fx-text-fill: -fx-primary;
+
+  -fx-font-size: 32pt;
+  -fx-font-weight: bold;
 }

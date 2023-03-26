@@ -17,7 +17,7 @@ import dice.ui.output.OutputController;
 /**
  * Scene manager class.
  */
-class SceneMgr {
+public class SceneMgr {
 
     public static final SceneMgr INSTANCE = new SceneMgr();
 
@@ -26,9 +26,10 @@ class SceneMgr {
 
     private Stage stage;
 
-    /**
-     * @param stage the stage to set.
-     */
+    public Stage getStage() {
+        return stage;
+    }
+
     public void setStage(final Stage stage) {
         this.stage = stage;
     }
