@@ -9,6 +9,9 @@
 **/.project
 **/.settings
 
+# Dice files.
+*.dic
+
 # Installer
 installer/Dice/
 installer/jre/

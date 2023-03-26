@@ -8,15 +8,19 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="TOP_CENTER" spacing="10.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dice.ui.output.OutputController">
+<VBox alignment="CENTER" minHeight="600.0" minWidth="800.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dice.ui.output.OutputController">
    <children>
-      <Label styleClass="title" text="%output_roll_lbl" />
+      <HBox alignment="CENTER_LEFT" fillHeight="false" VBox.vgrow="NEVER">
+         <children>
+            <Label styleClass="title" text="%output_roll_lbl" />
+         </children>
+      </HBox>
       <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
          <content>
             <VBox fx:id="diceOutputContainer" />
          </content>
       </ScrollPane>
-      <HBox alignment="CENTER" fillHeight="false" spacing="50.0">
+      <HBox alignment="CENTER" fillHeight="false" spacing="20.0" VBox.vgrow="NEVER">
          <children>
             <HBox alignment="CENTER_LEFT" fillHeight="false" spacing="20.0" HBox.hgrow="ALWAYS">
                <children>
@@ -30,6 +34,9 @@
             <Button alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#onClickRerollBtn" text="%output_reroll_btn" />
             <Button fx:id="backBtn" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#onClickBackBtn" text="%back_btn" HBox.hgrow="NEVER" />
          </children>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
       </HBox>
    </children>
    <padding>

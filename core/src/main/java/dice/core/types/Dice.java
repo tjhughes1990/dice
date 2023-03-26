@@ -1,5 +1,6 @@
 package dice.core.types;
 
+import java.io.Serializable;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -11,7 +12,7 @@ import java.util.TreeSet;
  */
 public record Dice(
     int sides
-) implements Comparable<Dice> {
+) implements Comparable<Dice>, Serializable {
 
     @Override
     public String toString() {
