@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>dice</groupId>
     <artifactId>build</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
     <name>Dice Build</name>
     <packaging>pom</packaging>
 
