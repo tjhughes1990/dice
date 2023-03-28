@@ -1,12 +1,10 @@
 .root {
   -fx-primary: rgb(192, 0, 0);
-  -fx-primary-a50: rgba(192, 0, 0, 0.5);
   -fx-primarydark: rgba(96, 0, 0, 1.0);
   -fx-primarydark-a50: rgba(96, 0, 0, 0.5);
 
   -fx-focus-color: -fx-primary;
   -fx-faint-focus-color: transparent;
-  -fx-accent: -fx-primary-a50;
 
   -fx-font-size: 16pt;
 }
