@@ -46,7 +46,7 @@ public class OutputController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        diceCollectionList.addListener((ListChangeListener.Change<? extends DiceCollection> c) -> {
+        diceCollectionList.addListener((final ListChangeListener.Change<? extends DiceCollection> c) -> {
             // Perform roll.
             final DiceRoller roller = new DiceRoller(diceCollectionList);
             roller.performRoll();
@@ -68,7 +68,7 @@ public class OutputController implements Initializable {
         for (int i = 0; i < newPanesCount; i++) {
             final Optional<TitledPane> newPane = createAccordionLeaf(diceCollectionList.get(i));
             if (newPane.isPresent()) {
-                final boolean isExpanded = i < existingPanesCount ? ((TitledPane) children.get(i)).isExpanded() : true;
+                final boolean isExpanded = i < existingPanesCount && ((TitledPane) children.get(i)).isExpanded();
                 final TitledPane titledPane = newPane.get();
                 titledPane.setExpanded(isExpanded);
                 newPanes.add(titledPane);

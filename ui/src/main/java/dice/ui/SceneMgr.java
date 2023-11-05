@@ -49,7 +49,7 @@ public class SceneMgr {
 
     private <T> Optional<T> switchScene(final URL sceneUrl) throws IOException {
         if (stage == null) {
-            return null;
+            return Optional.empty();
         }
 
         final FXMLLoader loader = new FXMLLoader(sceneUrl, Utils.RESOURCES);

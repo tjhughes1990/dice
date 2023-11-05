@@ -13,7 +13,7 @@ import org.junit.jupiter.api.io.TempDir;
 import dice.core.types.Dice;
 import dice.core.types.DiceCollection;
 
-public class DiceCollectionBinarySerialiserTests {
+class DiceCollectionBinarySerialiserTests {
 
     private static final String TEST_NAME = "Dice collection";
     private static final String TEST_FILE = "dice." + DiceCollectionBinarySerialiser.EXT;
@@ -28,7 +28,7 @@ public class DiceCollectionBinarySerialiserTests {
     }
 
     @Test
-    public void serialiseTest() {
+    void serialiseTest() {
         final DiceCollection diceCollection = new DiceCollection(TEST_NAME, Dice.D10, 3);
         final DiceCollectionSerialiser serialiser = new DiceCollectionBinarySerialiser();
 
@@ -39,7 +39,7 @@ public class DiceCollectionBinarySerialiserTests {
     }
 
     @Test
-    public void deserialiseTest() {
+    void deserialiseTest() {
         final DiceCollection originalDiceCollection = new DiceCollection(TEST_NAME, Dice.D10, 3);
         final DiceCollectionSerialiser serialiser = new DiceCollectionBinarySerialiser();
 

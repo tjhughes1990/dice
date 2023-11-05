@@ -14,7 +14,7 @@ import dice.core.types.DiceRolls;
 /**
  * Tests the {@link DiceRoller}.
  */
-public class DiceRollerTests {
+class DiceRollerTests {
 
     private static final String NAME = "TestDiceCollection";
 
@@ -22,7 +22,7 @@ public class DiceRollerTests {
      * Test the dice roller.
      */
     @Test
-    public void diceRollTest() {
+    void diceRollTest() {
         final DiceCollection diceCollection = new DiceCollection(NAME, Dice.D6, 2);
 
         final DiceRoller diceRoller = new DiceRoller(0L, List.of(diceCollection));
@@ -40,7 +40,7 @@ public class DiceRollerTests {
      * Test the dice roller.
      */
     @Test
-    public void seedTest() {
+    void seedTest() {
         final DiceCollection diceCollection0 = new DiceCollection(NAME, Dice.D6, 1);
         final DiceRoller diceRoller0 = new DiceRoller(0L, List.of(diceCollection0));
         diceRoller0.performRoll();
@@ -55,7 +55,7 @@ public class DiceRollerTests {
     }
 
     @Test
-    public void independenceTest() {
+    void independenceTest() {
         final List<DiceCollection> diceCollectionList = List.of(new DiceCollection(NAME), new DiceCollection(NAME));
         final DiceRoller diceRoller = new DiceRoller(0L, diceCollectionList);
         diceRoller.performRoll();

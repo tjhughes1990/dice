@@ -63,8 +63,6 @@ public class DiceCollectionBinarySerialiser implements DiceCollectionSerialiser 
                 diceCollectionList.add((DiceCollection) objectInputStream.readObject());
             }
 
-            objectInputStream.close();
-
             return Optional.of(diceCollectionList);
         } catch (final ClassNotFoundException | IOException e) {
             e.printStackTrace();
